@@ -1,4 +1,5 @@
 import * as THREE from 'three/webgpu';
+import { BRDF_Lambert, diffuseColor, float, mix, transformedNormalView, vec3 } from 'three/tsl';
 import {
   matcap,
   parametricRim,
@@ -34,7 +35,7 @@ const linearstep = FnCompat(
 const getShading = FnCompat(({ dotNL }: { dotNL: THREE.ShaderNodeObject<THREE.Node> }) => {
   const shadow = 1.0; // TODO
 
-  const feather = THREE.float(1.0).sub(shadingToony);
+  const feather = float(1.0).sub(shadingToony);
 
   let shading: THREE.ShaderNodeObject<THREE.Node> = dotNL.add(shadingShift);
   shading = linearstep({
@@ -57,8 +58,8 @@ const getDiffuse = FnCompat(
     shading: THREE.ShaderNodeObject<THREE.Node>;
     lightColor: THREE.ShaderNodeObject<THREE.Node>;
   }) => {
-    const diffuseColor = THREE.mix(shadeColor, THREE.diffuseColor, shading);
-    const col = lightColor.mul(THREE.BRDF_Lambert({ diffuseColor }));
+    const feathered = mix(shadeColor, diffuseColor, shading);
+    const col = lightColor.mul(BRDF_Lambert({ diffuseColor: feathered }));
 
     return col;
   },
@@ -70,7 +71,7 @@ export class MToonLightingModel extends THREE.LightingModel {
   }
 
   direct({ lightDirection, lightColor, reflectedLight }: THREE.LightingModelDirectInput) {
-    const dotNL = THREE.transformedNormalView.dot(lightDirection).clamp(-1.0, 1.0);
+    const dotNL = transformedNormalView.dot(lightDirection).clamp(-1.0, 1.0);
 
     // toon diffuse
     const shading = getShading({
@@ -95,7 +96,7 @@ export class MToonLightingModel extends THREE.LightingModel {
         parametricRim
           .add(matcap)
           .mul(rimMultiply)
-          .mul(THREE.mix(THREE.vec3(0.0), THREE.BRDF_Lambert({ diffuseColor: lightColor }), rimLightingMix)),
+          .mul(mix(vec3(0.0), BRDF_Lambert({ diffuseColor: lightColor }), rimLightingMix)),
       ),
     );
   }
@@ -109,11 +110,7 @@ export class MToonLightingModel extends THREE.LightingModel {
     // indirect irradiance
     (reflectedLight.indirectDiffuse as THREE.ShaderNodeObject<THREE.Node>).assign(
       (reflectedLight.indirectDiffuse as THREE.ShaderNodeObject<THREE.Node>).add(
-        (irradiance as THREE.ShaderNodeObject<THREE.Node>).mul(
-          THREE.BRDF_Lambert({
-            diffuseColor: THREE.diffuseColor,
-          }),
-        ),
+        (irradiance as THREE.ShaderNodeObject<THREE.Node>).mul(BRDF_Lambert({ diffuseColor })),
       ),
     );
   }
@@ -125,7 +122,7 @@ export class MToonLightingModel extends THREE.LightingModel {
         parametricRim
           .add(matcap)
           .mul(rimMultiply)
-          .mul(THREE.mix(THREE.vec3(1.0), THREE.vec3(0.0), rimLightingMix)),
+          .mul(mix(vec3(1.0), vec3(0.0), rimLightingMix)),
       ),
     );
   }
