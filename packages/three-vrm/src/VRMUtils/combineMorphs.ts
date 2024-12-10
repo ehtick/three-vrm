@@ -21,9 +21,17 @@ function collectMeshes(scene: THREE.Group): Set<THREE.Mesh> {
 
 function combineMorph(
   positionAttributes: (THREE.BufferAttribute | THREE.InterleavedBufferAttribute)[],
-  binds: Iterable<VRMExpressionMorphTargetBind>,
+  binds: Set<VRMExpressionMorphTargetBind>,
   morphTargetsRelative: boolean,
-): THREE.BufferAttribute {
+): THREE.BufferAttribute | THREE.InterleavedBufferAttribute {
+  // if there is only one morph target and the weight is 1.0, we can use the original as-is
+  if (binds.size === 1) {
+    const bind = binds.values().next().value!;
+    if (bind.weight === 1.0) {
+      return positionAttributes[bind.index];
+    }
+  }
+
   const newArray = new Float32Array(positionAttributes[0].count * 3);
   let weightSum = 0.0;
 
