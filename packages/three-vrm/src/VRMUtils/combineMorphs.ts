@@ -108,14 +108,18 @@ export function combineMorphs(vrm: VRMCore): void {
       continue;
     }
 
+    // prevent cloning morph attributes
+    const originalMorphAttributes = mesh.geometry.morphAttributes;
+    mesh.geometry.morphAttributes = {};
+
     const geometry = mesh.geometry.clone();
     mesh.geometry = geometry;
     const morphTargetsRelative = geometry.morphTargetsRelative;
 
-    const hasPMorph = geometry.morphAttributes.position != null;
-    const hasNMorph = geometry.morphAttributes.normal != null;
+    const hasPMorph = originalMorphAttributes.position != null;
+    const hasNMorph = originalMorphAttributes.normal != null;
 
-    const morphAttributes: typeof geometry.morphAttributes = {};
+    const morphAttributes: typeof originalMorphAttributes = {};
     const morphTargetDictionary: typeof mesh.morphTargetDictionary = {};
     const morphTargetInfluences: typeof mesh.morphTargetInfluences = [];
 
@@ -130,10 +134,10 @@ export function combineMorphs(vrm: VRMCore): void {
       let i = 0;
       for (const [name, bindSet] of nameBindSetMap) {
         if (hasPMorph) {
-          morphAttributes.position[i] = combineMorph(geometry.morphAttributes.position, bindSet, morphTargetsRelative);
+          morphAttributes.position[i] = combineMorph(originalMorphAttributes.position, bindSet, morphTargetsRelative);
         }
         if (hasNMorph) {
-          morphAttributes.normal[i] = combineMorph(geometry.morphAttributes.normal, bindSet, morphTargetsRelative);
+          morphAttributes.normal[i] = combineMorph(originalMorphAttributes.normal, bindSet, morphTargetsRelative);
         }
 
         expressionMap?.[name].addBind(
