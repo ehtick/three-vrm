@@ -180,6 +180,8 @@ export class VRMSpringBoneManager {
       return;
     }
 
+    springBonesTried.add(springBone);
+
     const depObjects = springBone.dependencies;
     for (const depObject of depObjects) {
       let encounteredSpringBone = false;
