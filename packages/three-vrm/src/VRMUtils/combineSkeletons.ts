@@ -11,8 +11,17 @@ import * as THREE from 'three';
 export function combineSkeletons(root: THREE.Object3D): void {
   const skinnedMeshes = collectSkinnedMeshes(root);
 
-  // List all bones and boneInverses for each meshes
+  // List all used skin indices for each skin index attribute
   const attributeUsedIndexSetMap = new Map<THREE.BufferAttribute | THREE.InterleavedBufferAttribute, Set<number>>();
+  for (const mesh of skinnedMeshes) {
+    const geometry = mesh.geometry;
+    const skinIndexAttr = geometry.getAttribute('skinIndex');
+    const skinWeightAttr = geometry.getAttribute('skinWeight');
+    const usedIndicesSet = listUsedIndices(skinIndexAttr, skinWeightAttr);
+    attributeUsedIndexSetMap.set(skinIndexAttr, usedIndicesSet);
+  }
+
+  // List all bones and boneInverses for each meshes
   const meshBoneInverseMapMap = new Map<THREE.SkinnedMesh, Map<THREE.Bone, THREE.Matrix4>>();
   for (const mesh of skinnedMeshes) {
     const boneInverseMap = listUsedBones(mesh, attributeUsedIndexSetMap);
@@ -92,12 +101,13 @@ function collectSkinnedMeshes(scene: THREE.Object3D): Set<THREE.SkinnedMesh> {
 /**
  * List all skin indices used by the given geometry.
  * If the skin weight is 0, the index won't be considered as used.
- * @param geometry The geometry to list used skin indices
+ * @param skinIndexAttr The skin index attribute to list used indices
+ * @param skinWeightAttr The skin weight attribute corresponding to the skin index attribute
  */
-function listUsedIndices(geometry: THREE.BufferGeometry): Set<number> {
-  const skinIndexAttr = geometry.getAttribute('skinIndex');
-  const skinWeightAttr = geometry.getAttribute('skinWeight');
-
+function listUsedIndices(
+  skinIndexAttr: THREE.BufferAttribute | THREE.InterleavedBufferAttribute,
+  skinWeightAttr: THREE.BufferAttribute | THREE.InterleavedBufferAttribute,
+): Set<number> {
   const usedIndices = new Set<number>();
 
   for (let i = 0; i < skinIndexAttr.count; i++) {
@@ -130,11 +140,10 @@ function listUsedBones(
 
   const geometry = mesh.geometry;
   const skinIndexAttr = geometry.getAttribute('skinIndex');
-  let usedIndicesSet = attributeUsedIndexSetMap.get(skinIndexAttr);
+  const usedIndicesSet = attributeUsedIndexSetMap.get(skinIndexAttr);
 
   if (!usedIndicesSet) {
-    usedIndicesSet = listUsedIndices(geometry);
-    attributeUsedIndexSetMap.set(skinIndexAttr, usedIndicesSet);
+    throw new Error('Unreachable. attributeUsedIndexSetMap does not know the skin index attribute');
   }
 
   for (const index of usedIndicesSet) {
