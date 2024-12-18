@@ -92,8 +92,7 @@ function collectSkinnedMeshes(scene: THREE.Object3D): Set<THREE.SkinnedMesh> {
 /**
  * List all skin indices used by the given geometry.
  * If the skin weight is 0, the index won't be considered as used.
- * @param skinIndexAttr The skin index attribute
- * @param skinWeightAttr The skin weight attribute
+ * @param geometry The geometry to list used skin indices
  */
 function listUsedIndices(geometry: THREE.BufferGeometry): Set<number> {
   const skinIndexAttr = geometry.getAttribute('skinIndex');
