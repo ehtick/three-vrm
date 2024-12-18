@@ -119,6 +119,15 @@ export class VRMSpringBoneLoaderPlugin implements GLTFLoaderPlugin {
 
     const colliders = extension.colliders?.map((schemaCollider, iCollider) => {
       const node = threeNodes[schemaCollider.node!];
+
+      // Some models put `-1` to the node index of colliders
+      if (node == null) {
+        console.warn(
+          `VRMSpringBoneLoaderPlugin: The collider #${iCollider} attempted to use the node #${schemaCollider.node} but not found`,
+        );
+        return null;
+      }
+
       const schemaShape = schemaCollider.shape!;
 
       // TODO: separate into several functions
@@ -176,13 +185,14 @@ export class VRMSpringBoneLoaderPlugin implements GLTFLoaderPlugin {
 
     const colliderGroups = extension.colliderGroups?.map(
       (schemaColliderGroup, iColliderGroup): VRMSpringBoneColliderGroup => {
-        const cols = (schemaColliderGroup.colliders ?? []).map((iCollider) => {
+        const cols = (schemaColliderGroup.colliders ?? []).flatMap((iCollider) => {
           const col = colliders?.[iCollider];
 
           if (col == null) {
-            throw new Error(
+            console.warn(
               `VRMSpringBoneLoaderPlugin: The colliderGroup #${iColliderGroup} attempted to use a collider #${iCollider} but not found`,
             );
+            return [];
           }
 
           return col;
