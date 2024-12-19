@@ -54,6 +54,7 @@ export class VRMSpringBoneManager {
   }
 
   private _objectSpringBonesMap = new Map<THREE.Object3D, Set<VRMSpringBoneJoint>>();
+  private _isSortedJointsDirty = false;
 
   constructor() {
     this._relevantChildrenUpdated = this._relevantChildrenUpdated.bind(this);
@@ -68,7 +69,8 @@ export class VRMSpringBoneManager {
       this._objectSpringBonesMap.set(joint.bone, objectSet);
     }
     objectSet.add(joint);
-    this._sortJoints();
+
+    this._isSortedJointsDirty = true;
   }
 
   /**
@@ -85,7 +87,8 @@ export class VRMSpringBoneManager {
 
     const objectSet = this._objectSpringBonesMap.get(joint.bone)!;
     objectSet.delete(joint);
-    this._sortJoints();
+
+    this._isSortedJointsDirty = true;
   }
 
   /**
@@ -98,6 +101,8 @@ export class VRMSpringBoneManager {
   }
 
   public setInitState(): void {
+    this._sortJoints();
+
     for (let i = 0; i < this._sortedJoints.length; i++) {
       const springBone = this._sortedJoints[i];
       springBone.bone.updateMatrix();
@@ -107,6 +112,8 @@ export class VRMSpringBoneManager {
   }
 
   public reset(): void {
+    this._sortJoints();
+
     for (let i = 0; i < this._sortedJoints.length; i++) {
       const springBone = this._sortedJoints[i];
       springBone.bone.updateMatrix();
@@ -116,6 +123,8 @@ export class VRMSpringBoneManager {
   }
 
   public update(delta: number): void {
+    this._sortJoints();
+
     for (let i = 0; i < this._ancestors.length; i++) {
       this._ancestors[i].updateWorldMatrix(i === 0, false);
     }
@@ -135,12 +144,20 @@ export class VRMSpringBoneManager {
 
   /**
    * Sorts the joints ensuring they are updated in the correct order taking dependencies into account.
+   *
+   * This method updates {@link _sortedJoints} and {@link _ancestors}.
+   * Make sure to call this before using them.
    */
   private _sortJoints() {
+    if (!this._isSortedJointsDirty) {
+      return;
+    }
+
     const springBoneOrder: Array<VRMSpringBoneJoint> = [];
     const springBonesTried = new Set<VRMSpringBoneJoint>();
     const springBonesDone = new Set<VRMSpringBoneJoint>();
     const ancestors = new Set<THREE.Object3D>();
+
     for (const springBone of this._joints) {
       this._insertJointSort(springBone, springBonesTried, springBonesDone, springBoneOrder, ancestors);
     }
@@ -159,6 +176,8 @@ export class VRMSpringBoneManager {
         return false;
       });
     }
+
+    this._isSortedJointsDirty = false;
   }
 
   private _insertJointSort(
