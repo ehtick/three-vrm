@@ -58,14 +58,20 @@ export class VRMAnimationLoaderPlugin implements GLTFLoaderPlugin {
     }
 
     const specVersion = defExtension.specVersion;
-    if (!POSSIBLE_SPEC_VERSIONS.has(specVersion)) {
-      console.warn(`VRMAnimationLoaderPlugin: Unknown VRMC_vrm_animation spec version: ${specVersion}`);
-      return;
-    }
-    if (specVersion === '1.0-draft') {
+    if (specVersion == null) {
       console.warn(
-        'VRMAnimationLoaderPlugin: Using a draft spec version: 1.0-draft. Some behaviors may be different. Consider updating the animation file.',
+        'VRMAnimationLoaderPlugin: specVersion of the VRMA is not defined. Consider updating the animation file. Assuming the spec version is 1.0.',
       );
+    } else {
+      if (!POSSIBLE_SPEC_VERSIONS.has(specVersion)) {
+        console.warn(`VRMAnimationLoaderPlugin: Unknown VRMC_vrm_animation spec version: ${specVersion}`);
+        return;
+      }
+      if (specVersion === '1.0-draft') {
+        console.warn(
+          'VRMAnimationLoaderPlugin: Using a draft spec version: 1.0-draft. Some behaviors may be different. Consider updating the animation file.',
+        );
+      }
     }
 
     const nodeMap = this._createNodeMap(defExtension);
