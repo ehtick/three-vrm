@@ -205,7 +205,9 @@ export class VRMAnimationLoaderPlugin implements GLTFLoaderPlugin {
         while (parentBoneName != null && worldMatrixMap.get(parentBoneName) == null) {
           parentBoneName = VRMHumanBoneParentMap[parentBoneName];
         }
-        parentBoneName ?? (parentBoneName = 'hipsParent');
+        if (parentBoneName == null) {
+          parentBoneName = 'hipsParent';
+        }
 
         if (path === 'translation') {
           if (boneName !== 'hips') {
