@@ -265,7 +265,7 @@ function collectSkinIndexAttrs(
   >();
 
   for (const mesh of meshes) {
-    let skinIndexAttr = mesh.geometry.getAttribute('skinIndex');
+    const skinIndexAttr = mesh.geometry.getAttribute('skinIndex');
 
     // Get or create a map for the skin index attribute
     let newSkinIndexBonesMap = skinIndexNewSkinIndexBonesMapMap.get(skinIndexAttr);
@@ -279,17 +279,19 @@ function collectSkinIndexAttrs(
     }
 
     // Check if the bone set is already registered
-    for (const bones of newSkinIndexBonesMap.values()) {
-      if (arrayEquals(bones, mesh.skeleton.bones)) {
-        continue;
-      }
+    // If the bone set is already registered, reuse the skin index attribute
+    let newSkinIndexAttr = Array.from(newSkinIndexBonesMap).find(([_, bones]) =>
+      arrayEquals(bones, mesh.skeleton.bones),
+    )?.[0];
+
+    // If there is no matching bone set, clone the skin index attribute
+    if (newSkinIndexAttr == null) {
+      newSkinIndexAttr = skinIndexAttr.clone();
+      newSkinIndexBonesMap.set(newSkinIndexAttr, mesh.skeleton.bones);
+      skinIndexBonesPairSet.add([newSkinIndexAttr, mesh.skeleton.bones]);
     }
 
-    // There is no matching bone set, so clone the skin index attribute
-    skinIndexAttr = skinIndexAttr.clone();
-    mesh.geometry.setAttribute('skinIndex', skinIndexAttr);
-    newSkinIndexBonesMap.set(skinIndexAttr, mesh.skeleton.bones);
-    skinIndexBonesPairSet.add([skinIndexAttr, mesh.skeleton.bones]);
+    mesh.geometry.setAttribute('skinIndex', newSkinIndexAttr);
   }
 
   return skinIndexBonesPairSet;
