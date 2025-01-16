@@ -27,7 +27,7 @@
         "format": ["camelCase"]
       },
       {
-        "selector": "variable",
+        "selector": "variableLike",
         "format": ["camelCase", "UPPER_CASE"],
         "leadingUnderscore": "allow"
       },
