@@ -128,18 +128,38 @@ These type definitions are authored manually by referencing the [vrm spec schema
 
 ## How to release
 
-There is a GitHub Actions workflow called "Publish to npmjs".
+### Publish to npm
+
+Run the workflow "Publish to npmjs": https://github.com/pixiv/three-vrm/actions/workflows/publish.yml
+You can trigger the workflow by clicking the "Run workflow" button at the top right of the page.
+
 The workflow is defined in `.github/workflows/publish.yml`.
 
-https://github.com/pixiv/three-vrm/actions/workflows/publish.yml
+### Merge `dev` into `release`
 
-After the workflow done, don't forget to:
+```sh
+# Assuming you are on the `dev` branch
+git pull
+git switch release
+git pull
+git merge dev
+git push
+git switch dev
+```
 
-- Add a release note: https://github.com/pixiv/three-vrm/releases
-- Manage the milestone: https://github.com/pixiv/three-vrm/milestones
-  - Rename the existing `next` milestone to the version
-  - Close the milestone
-  - Open a new `next` milestone
+### Add a release note
+
+Add a release note: https://github.com/pixiv/three-vrm/releases
+
+Copying the release note from the previous release helps you to create a new release note.
+
+### Manage milestones
+
+Manage milestones: https://github.com/pixiv/three-vrm/milestones
+
+- Rename the existing `next` milestone to the version
+- Close the milestone
+- Open a new `next` milestone
 
 ## When you add a new package to the repository
 
