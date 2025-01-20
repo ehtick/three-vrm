@@ -65,18 +65,43 @@ export function combineSkeletons(root: THREE.Object3D): void {
   }
 
   // prepare new skeletons for each group, and bind them to the meshes
-  for (const { boneInverseMap, meshes } of groups) {
+
+  // the condition to use the same skin index attribute:
+  // - the same skin index attribute
+  // - and the skeleton is same
+  // - and the bone set is same
+  const cache = new Map<string, THREE.BufferAttribute | THREE.InterleavedBufferAttribute>();
+  const skinIndexDispatcher = new ObjectIndexDispatcher<THREE.BufferAttribute | THREE.InterleavedBufferAttribute>();
+  const skeletonDispatcher = new ObjectIndexDispatcher<THREE.Skeleton>();
+  const boneDispatcher = new ObjectIndexDispatcher<THREE.Bone>();
+
+  for (const group of groups) {
+    const { boneInverseMap, meshes } = group;
+
     // create a new skeleton
     const newBones = Array.from(boneInverseMap.keys());
     const newBoneInverses = Array.from(boneInverseMap.values());
     const newSkeleton = new THREE.Skeleton(newBones, newBoneInverses);
-
-    // collect skin index attributes and corresponding bone arrays
-    const skinIndexBonesPairSet = collectSkinIndexAttrs(meshes);
+    const skeletonKey = skeletonDispatcher.getOrCreate(newSkeleton);
 
     // remap skin index attribute
-    for (const [skinIndexAttr, bones] of skinIndexBonesPairSet) {
-      remapSkinIndexAttribute(skinIndexAttr, bones, newBones);
+    for (const mesh of meshes) {
+      const skinIndexAttr = mesh.geometry.getAttribute('skinIndex');
+      const skinIndexKey = skinIndexDispatcher.getOrCreate(skinIndexAttr);
+
+      const bones = mesh.skeleton.bones;
+      const bonesKey = bones.map((bone) => boneDispatcher.getOrCreate(bone)).join(',');
+
+      const key = `${skinIndexKey};${skeletonKey};${bonesKey}`;
+      let newSkinIndexAttr = cache.get(key);
+
+      if (newSkinIndexAttr == null) {
+        newSkinIndexAttr = skinIndexAttr.clone();
+        remapSkinIndexAttribute(newSkinIndexAttr, bones, newBones);
+        cache.set(key, newSkinIndexAttr);
+      }
+
+      mesh.geometry.setAttribute('skinIndex', newSkinIndexAttr);
     }
 
     // bind the new skeleton to the meshes
@@ -189,6 +214,13 @@ function boneInverseMapIsMergeable(
   return true;
 }
 
+/**
+ * Remap the skin index attribute from old bones to new bones.
+ * This function modifies the given attribute in place.
+ * @param attribute The skin index attribute to remap
+ * @param oldBones The bone array that the attribute is currently using
+ * @param newBones The bone array that the attribute will be using
+ */
 function remapSkinIndexAttribute(
   attribute: THREE.BufferAttribute | THREE.InterleavedBufferAttribute,
   oldBones: THREE.Bone[],
@@ -236,63 +268,22 @@ function matrixEquals(a: THREE.Matrix4, b: THREE.Matrix4, tolerance?: number) {
   return true;
 }
 
-/**
- * Check if the contents of two arrays are equal.
- */
-function arrayEquals<T>(a: T[], b: T[]): boolean {
-  if (a.length !== b.length) {
-    return false;
+class ObjectIndexDispatcher<T> {
+  private _objectIndexMap = new Map<T, number>();
+  private _index = 0;
+
+  public get(obj: T): number | undefined {
+    return this._objectIndexMap.get(obj);
   }
 
-  return a.every((v, i) => v === b[i]);
-}
-
-/**
- * Collect skin index attributes and corresponding bone arrays from the given skinned meshes.
- * If a skin index attribute is shared among different bone sets, clone the attribute.
- */
-function collectSkinIndexAttrs(
-  meshes: Iterable<THREE.SkinnedMesh>,
-): Set<[THREE.BufferAttribute | THREE.InterleavedBufferAttribute, THREE.Bone[]]> {
-  const skinIndexBonesPairSet = new Set<[THREE.BufferAttribute | THREE.InterleavedBufferAttribute, THREE.Bone[]]>();
-
-  // Collect skin index attributes
-  // skinIndex attribute might be shared among different bone sets
-  // If there are multiple bone sets that share the same skinIndex attribute, clone the attribute
-  const skinIndexNewSkinIndexBonesMapMap = new Map<
-    THREE.BufferAttribute | THREE.InterleavedBufferAttribute,
-    Map<THREE.BufferAttribute | THREE.InterleavedBufferAttribute, THREE.Bone[]>
-  >();
-
-  for (const mesh of meshes) {
-    const skinIndexAttr = mesh.geometry.getAttribute('skinIndex');
-
-    // Get or create a map for the skin index attribute
-    let newSkinIndexBonesMap = skinIndexNewSkinIndexBonesMapMap.get(skinIndexAttr);
-    if (newSkinIndexBonesMap == null) {
-      // Create a new map for the skin index attribute and register the bone array
-      newSkinIndexBonesMap = new Map();
-      skinIndexNewSkinIndexBonesMapMap.set(skinIndexAttr, newSkinIndexBonesMap);
-      newSkinIndexBonesMap.set(skinIndexAttr, mesh.skeleton.bones);
-      skinIndexBonesPairSet.add([skinIndexAttr, mesh.skeleton.bones]);
-      continue;
+  public getOrCreate(obj: T): number {
+    let index = this._objectIndexMap.get(obj);
+    if (index == null) {
+      index = this._index;
+      this._objectIndexMap.set(obj, index);
+      this._index++;
     }
 
-    // Check if the bone set is already registered
-    // If the bone set is already registered, reuse the skin index attribute
-    let newSkinIndexAttr = Array.from(newSkinIndexBonesMap).find(([_, bones]) =>
-      arrayEquals(bones, mesh.skeleton.bones),
-    )?.[0];
-
-    // If there is no matching bone set, clone the skin index attribute
-    if (newSkinIndexAttr == null) {
-      newSkinIndexAttr = skinIndexAttr.clone();
-      newSkinIndexBonesMap.set(newSkinIndexAttr, mesh.skeleton.bones);
-      skinIndexBonesPairSet.add([newSkinIndexAttr, mesh.skeleton.bones]);
-    }
-
-    mesh.geometry.setAttribute('skinIndex', newSkinIndexAttr);
+    return index;
   }
-
-  return skinIndexBonesPairSet;
 }
