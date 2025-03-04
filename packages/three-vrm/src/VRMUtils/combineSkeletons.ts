@@ -12,13 +12,21 @@ export function combineSkeletons(root: THREE.Object3D): void {
   const skinnedMeshes = collectSkinnedMeshes(root);
 
   // List all used skin indices for each skin index attribute
-  const attributeUsedIndexSetMap = new Map<THREE.BufferAttribute | THREE.InterleavedBufferAttribute, Set<number>>();
+  /** A map: skin index attribute -> skin weight attribute -> used index set */
+  const attributeUsedIndexSetMap = new Map<
+    THREE.BufferAttribute | THREE.InterleavedBufferAttribute,
+    Map<THREE.BufferAttribute | THREE.InterleavedBufferAttribute, Set<number>>
+  >();
   for (const mesh of skinnedMeshes) {
     const geometry = mesh.geometry;
+
     const skinIndexAttr = geometry.getAttribute('skinIndex');
+    const skinIndexMap = attributeUsedIndexSetMap.get(skinIndexAttr) ?? new Map();
+    attributeUsedIndexSetMap.set(skinIndexAttr, skinIndexMap);
+
     const skinWeightAttr = geometry.getAttribute('skinWeight');
     const usedIndicesSet = listUsedIndices(skinIndexAttr, skinWeightAttr);
-    attributeUsedIndexSetMap.set(skinIndexAttr, usedIndicesSet);
+    skinIndexMap.set(skinWeightAttr, usedIndicesSet);
   }
 
   // List all bones and boneInverses for each meshes
@@ -57,24 +65,47 @@ export function combineSkeletons(root: THREE.Object3D): void {
   }
 
   // prepare new skeletons for each group, and bind them to the meshes
-  for (const { boneInverseMap, meshes } of groups) {
+
+  // the condition to use the same skin index attribute:
+  // - the same skin index attribute
+  // - and the skeleton is same
+  // - and the bone set is same
+  const cache = new Map<string, THREE.BufferAttribute | THREE.InterleavedBufferAttribute>();
+  const skinIndexDispatcher = new ObjectIndexDispatcher<THREE.BufferAttribute | THREE.InterleavedBufferAttribute>();
+  const skeletonDispatcher = new ObjectIndexDispatcher<THREE.Skeleton>();
+  const boneDispatcher = new ObjectIndexDispatcher<THREE.Bone>();
+
+  for (const group of groups) {
+    const { boneInverseMap, meshes } = group;
+
     // create a new skeleton
     const newBones = Array.from(boneInverseMap.keys());
     const newBoneInverses = Array.from(boneInverseMap.values());
     const newSkeleton = new THREE.Skeleton(newBones, newBoneInverses);
+    const skeletonKey = skeletonDispatcher.getOrCreate(newSkeleton);
 
-    const attributeProcessedSet = new Set<THREE.BufferAttribute | THREE.InterleavedBufferAttribute>();
-
+    // remap skin index attribute
     for (const mesh of meshes) {
-      const attribute = mesh.geometry.getAttribute('skinIndex');
+      const skinIndexAttr = mesh.geometry.getAttribute('skinIndex');
+      const skinIndexKey = skinIndexDispatcher.getOrCreate(skinIndexAttr);
 
-      if (!attributeProcessedSet.has(attribute)) {
-        // remap skin index attribute
-        remapSkinIndexAttribute(attribute, mesh.skeleton.bones, newBones);
-        attributeProcessedSet.add(attribute);
+      const bones = mesh.skeleton.bones;
+      const bonesKey = bones.map((bone) => boneDispatcher.getOrCreate(bone)).join(',');
+
+      const key = `${skinIndexKey};${skeletonKey};${bonesKey}`;
+      let newSkinIndexAttr = cache.get(key);
+
+      if (newSkinIndexAttr == null) {
+        newSkinIndexAttr = skinIndexAttr.clone();
+        remapSkinIndexAttribute(newSkinIndexAttr, bones, newBones);
+        cache.set(key, newSkinIndexAttr);
       }
 
-      // bind the new skeleton to the mesh
+      mesh.geometry.setAttribute('skinIndex', newSkinIndexAttr);
+    }
+
+    // bind the new skeleton to the meshes
+    for (const mesh of meshes) {
       mesh.bind(newSkeleton, new THREE.Matrix4());
     }
   }
@@ -132,7 +163,10 @@ function listUsedIndices(
  */
 function listUsedBones(
   mesh: THREE.SkinnedMesh,
-  attributeUsedIndexSetMap: Map<THREE.BufferAttribute | THREE.InterleavedBufferAttribute, Set<number>>,
+  attributeUsedIndexSetMap: Map<
+    THREE.BufferAttribute | THREE.InterleavedBufferAttribute,
+    Map<THREE.BufferAttribute | THREE.InterleavedBufferAttribute, Set<number>>
+  >,
 ): Map<THREE.Bone, THREE.Matrix4> {
   const boneInverseMap = new Map<THREE.Bone, THREE.Matrix4>();
 
@@ -140,10 +174,14 @@ function listUsedBones(
 
   const geometry = mesh.geometry;
   const skinIndexAttr = geometry.getAttribute('skinIndex');
-  const usedIndicesSet = attributeUsedIndexSetMap.get(skinIndexAttr);
+  const skinWeightAttr = geometry.getAttribute('skinWeight');
+  const skinIndexMap = attributeUsedIndexSetMap.get(skinIndexAttr);
+  const usedIndicesSet = skinIndexMap?.get(skinWeightAttr);
 
   if (!usedIndicesSet) {
-    throw new Error('Unreachable. attributeUsedIndexSetMap does not know the skin index attribute');
+    throw new Error(
+      'Unreachable. attributeUsedIndexSetMap does not know the skin index attribute or the skin weight attribute.',
+    );
   }
 
   for (const index of usedIndicesSet) {
@@ -176,6 +214,13 @@ function boneInverseMapIsMergeable(
   return true;
 }
 
+/**
+ * Remap the skin index attribute from old bones to new bones.
+ * This function modifies the given attribute in place.
+ * @param attribute The skin index attribute to remap
+ * @param oldBones The bone array that the attribute is currently using
+ * @param newBones The bone array that the attribute will be using
+ */
 function remapSkinIndexAttribute(
   attribute: THREE.BufferAttribute | THREE.InterleavedBufferAttribute,
   oldBones: THREE.Bone[],
@@ -221,4 +266,24 @@ function matrixEquals(a: THREE.Matrix4, b: THREE.Matrix4, tolerance?: number) {
   }
 
   return true;
+}
+
+class ObjectIndexDispatcher<T> {
+  private _objectIndexMap = new Map<T, number>();
+  private _index = 0;
+
+  public get(obj: T): number | undefined {
+    return this._objectIndexMap.get(obj);
+  }
+
+  public getOrCreate(obj: T): number {
+    let index = this._objectIndexMap.get(obj);
+    if (index == null) {
+      index = this._index;
+      this._objectIndexMap.set(obj, index);
+      this._index++;
+    }
+
+    return index;
+  }
 }
