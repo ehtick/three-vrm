@@ -27,11 +27,11 @@ export default tseslint.config(
     rules: {
       curly: ['error', 'multi-line'],
 
-      'no-console': ['error', {
+      ['no-console']: ['error', {
         allow: ['info', 'warn', 'error'],
       }],
 
-      '@typescript-eslint/naming-convention': ['error', {
+      ['@typescript-eslint/naming-convention']: ['error', {
         selector: 'default',
         format: ['camelCase'],
       }, {
@@ -64,12 +64,12 @@ export default tseslint.config(
         format: ['camelCase', 'PascalCase', 'UPPER_CASE'],
       }],
 
-      '@typescript-eslint/no-unused-vars': ['warn', {
+      ['@typescript-eslint/no-unused-vars']: ['warn', {
         args: 'none',
       }],
 
-      '@typescript-eslint/no-explicit-any': 'off',
-      '@typescript-eslint/no-non-null-assertion': ['off'],
+      ['@typescript-eslint/no-explicit-any']: 'off',
+      ['@typescript-eslint/no-non-null-assertion']: ['off'],
     },
   },
 
@@ -83,8 +83,8 @@ export default tseslint.config(
       html,
     },
     rules: {
-      'padded-blocks': 'off',
-      'no-unused-vars': 'off',
+      ['padded-blocks']: 'off',
+      ['no-unused-vars']: 'off',
     },
   },
 );
