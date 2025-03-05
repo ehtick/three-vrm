@@ -35,7 +35,7 @@
     "build-dev": "cross-env NODE_ENV=development yarn build-js",
     "build-prod": "cross-env NODE_ENV=production yarn build-js",
     "build-types": "tsc --declaration --declarationDir ./types --emitDeclarationOnly",
-    "docs-legacy": "typedoc --entryPoints ./src/index.ts --out docs",
+    "docs-legacy": "typedoc --plugin ../../typedoc-redirect-legacy-docs-plugin.mjs",
     "lint": "eslint \"src/**/*.{ts,tsx}\"  && yarn lint-examples &&  prettier \"src/**/*.{ts,tsx}\" --check",
     "lint-examples": "eslint \"examples/**/*.{ts,tsx,js,html}\" --rule \"padded-blocks: error\"",
     "lint-fix": "eslint \"src/**/*.{ts,tsx}\" --fix && eslint \"examples/**/*.{ts,tsx,js,html}\" --fix &&  prettier \"src/**/*.{ts,tsx}\" --write"
