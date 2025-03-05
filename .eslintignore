@@ -1,7 +1,0 @@
-/packages/*/docs/
-/packages/*/lib/
-/packages/*/node_modules/
-/packages/*/types/
-!/packages/types-*/types/
-
-jest.config.js
