@@ -1,0 +1,4 @@
+{
+  "name": "types-vrmc-vrm-1.0",
+  "entryPoints": ["types/index.d.ts"]
+}

@@ -19,7 +19,7 @@
     "version": "yarn all",
     "all": "yarn lint && yarn clean && yarn docs",
     "clean": "rimraf docs/",
-    "docs": "typedoc --entryPoints ./types/index.d.ts --out docs",
+    "docs-legacy": "typedoc --entryPoints ./types/index.d.ts --out docs",
     "lint": "eslint \"types/**/*.{ts,tsx}\" && prettier \"types/**/*.{ts,tsx}\" --check",
     "lint-fix": "eslint \"types/**/*.{ts,tsx}\" --fix && prettier \"types/**/*.{ts,tsx}\" --write"
   },

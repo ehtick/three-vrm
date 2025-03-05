@@ -1,0 +1,4 @@
+{
+  "name": "types-vrmc-materials-hdr-emissive-multiplier-1.0",
+  "entryPoints": ["types/index.d.ts"]
+}

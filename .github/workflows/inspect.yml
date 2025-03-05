@@ -128,6 +128,41 @@ jobs:
       with:
         name: docs
         path: |
+          /docs/
+
+  docs-legacy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Setup Node
+      uses: actions/setup-node@v4
+      with:
+        node-version-file: './.node-version'
+    - name: Cache Deps
+      uses: actions/cache@v4
+      with:
+        path: |
+          node_modules
+          packages/*/node_modules
+        key: ${{ runner.os }}-yarn-${{ hashFiles( 'yarn.lock' ) }}
+        restore-keys: |
+          ${{ runner.os }}-yarn-
+    - name: Fetch Deps
+      run: yarn install --frozen-lockfile
+    - name: Download Builds
+      uses: actions/download-artifact@v4
+      with:
+        name: build
+        path: packages
+    - name: Build Docs
+      run: yarn docs-legacy
+    - name: Upload Docs
+      uses: actions/upload-artifact@v4
+      with:
+        name: docs-legacy
+        path: |
           packages/*/docs/
 
   gh-pages:
@@ -163,6 +198,11 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: docs
+        path: public
+    - name: Download Docs (legacy)
+      uses: actions/download-artifact@v4
+      with:
+        name: docs-legacy
         path: public/packages
     - name: Copy Examples
       run: |

@@ -1,0 +1,4 @@
+{
+  "name": "three-vrm-materials-v0compat",
+  "entryPoints": ["src/index.ts"]
+}

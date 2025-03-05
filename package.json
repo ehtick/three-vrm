@@ -15,7 +15,8 @@
     "test": "lerna run test",
     "lint": "lerna run lint",
     "lint-fix": "lerna run lint-fix",
-    "docs": "lerna run docs",
+    "docs": "typedoc",
+    "docs-legacy": "lerna run docs-legacy",
     "prepare": "husky"
   },
   "devDependencies": {
