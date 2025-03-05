@@ -138,8 +138,8 @@ See the example for the complete code: https://github.com/pixiv/three-vrm/blob/r
 
 ## Contributing
 
-See: [CONTRIBUTING.md](CONTRIBUTING.md)
+See: [CONTRIBUTING.md](../../CONTRIBUTING.md)
 
 ## LICENSE
 
-[MIT](LICENSE)
+[MIT](../../LICENSE)
