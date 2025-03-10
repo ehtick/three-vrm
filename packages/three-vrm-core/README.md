@@ -6,4 +6,4 @@ The implementation of core features of VRM, for @pixiv/three-vrm
 
 [Examples](https://pixiv.github.io/three-vrm/packages/three-vrm-core/examples)
 
-[Documentation](https://pixiv.github.io/three-vrm/packages/three-vrm-core/docs)
+[API Reference](https://pixiv.github.io/three-vrm/docs/modules/three-vrm-core)

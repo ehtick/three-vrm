@@ -6,7 +6,7 @@ MToon (toon material) module for @pixiv/three-vrm
 
 [Examples](https://pixiv.github.io/three-vrm/packages/three-vrm-materials-mtoon/examples)
 
-[Documentation](https://pixiv.github.io/three-vrm/packages/three-vrm-materials-mtoon/docs)
+[API Reference](https://pixiv.github.io/three-vrm/docs/modules/three-vrm-materials-mtoon)
 
 ## WebGPU Support
 
