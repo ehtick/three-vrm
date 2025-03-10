@@ -171,6 +171,7 @@ jobs:
     needs:
     - build
     - docs
+    - docs-legacy
     steps:
     - name: Checkout
       uses: actions/checkout@v4
