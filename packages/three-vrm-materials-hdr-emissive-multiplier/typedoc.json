@@ -1,0 +1,4 @@
+{
+  "name": "three-vrm-materials-hdr-emissive-multiplier",
+  "entryPoints": ["src/index.ts"]
+}

@@ -1,0 +1,12 @@
+{
+  "entryPoints": [
+    "packages/*"
+  ],
+  "projectDocuments": [
+    "guides/*.md"
+  ],
+  "name": "@pixiv/three-vrm",
+  "entryPointStrategy": "packages",
+  "out": "docs",
+  "includeVersion": true
+}

@@ -1,0 +1,4 @@
+{
+  "name": "types-vrmc-node-constraint-1.0",
+  "entryPoints": ["types/index.d.ts"]
+}

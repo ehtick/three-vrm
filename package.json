@@ -8,14 +8,15 @@
     "provenance": true
   },
   "scripts": {
-    "all": "yarn clean && yarn build && yarn test && yarn lint && yarn docs",
-    "clean": "lerna run clean",
+    "all": "yarn clean && yarn build && yarn test && yarn lint && yarn docs && yarn docs-legacy",
+    "clean": "rimraf docs/ && lerna run clean",
     "dev": "cross-env NODE_ENV=development SERVE=1 node ./bin/build.mjs",
     "build": "lerna run build",
     "test": "lerna run test",
     "lint": "lerna run lint",
     "lint-fix": "lerna run lint-fix",
-    "docs": "lerna run docs",
+    "docs": "typedoc",
+    "docs-legacy": "lerna run docs-legacy",
     "prepare": "husky"
   },
   "devDependencies": {
