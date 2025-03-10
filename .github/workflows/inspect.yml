@@ -128,7 +128,7 @@ jobs:
       with:
         name: docs
         path: |
-          /docs/
+          docs
 
   docs-legacy:
     runs-on: ubuntu-latest

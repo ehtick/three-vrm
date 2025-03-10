@@ -16,8 +16,7 @@
     "directory": "packages/types-vrmc-springbone-extended-collider-1.0"
   },
   "scripts": {
-    "version": "yarn all",
-    "all": "yarn lint && yarn clean && yarn docs",
+    "version": "yarn clean && yarn build",
     "clean": "rimraf docs/",
     "docs-legacy": "typedoc --plugin ../../typedoc-redirect-legacy-docs-plugin.mjs",
     "lint": "eslint \"types/**/*.{ts,tsx}\" && prettier \"types/**/*.{ts,tsx}\" --check",
