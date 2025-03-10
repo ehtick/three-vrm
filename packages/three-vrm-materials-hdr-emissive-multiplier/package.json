@@ -26,8 +26,7 @@
     "directory": "packages/three-vrm-materials-hdr-emissive-multiplier"
   },
   "scripts": {
-    "version": "yarn all",
-    "all": "yarn lint && yarn clean && yarn build && yarn docs",
+    "version": "yarn clean && yarn build",
     "dev": "cross-env SERVE=1 yarn build-dev",
     "clean": "rimraf docs/ lib/ types/",
     "build": "yarn build-dev && yarn build-prod && yarn build-types",

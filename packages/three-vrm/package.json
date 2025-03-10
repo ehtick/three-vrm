@@ -31,8 +31,7 @@
     "directory": "packages/three-vrm"
   },
   "scripts": {
-    "version": "yarn all",
-    "all": "yarn test && yarn lint && yarn clean && yarn build && yarn docs",
+    "version": "yarn clean && yarn build",
     "dev": "cross-env SERVE=1 yarn build-dev",
     "clean": "rimraf docs/ lib/ types/",
     "build": "yarn build-dev && yarn build-prod && yarn build-types",
