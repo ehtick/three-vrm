@@ -10,4 +10,4 @@ The extension root is named `VRM` .
 
 [GitHub Repository](https://github.com/pixiv/three-vrm/tree/dev/packages/types-vrm-0.0)
 
-[Documentation](https://pixiv.github.io/three-vrm/packages/types-vrm-0.0/docs)
+[API Reference](https://pixiv.github.io/three-vrm/docs/modules/types-vrm-0.0)

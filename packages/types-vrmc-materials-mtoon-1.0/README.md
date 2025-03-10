@@ -10,4 +10,4 @@ The extension root is named `VRMCSpringBone` .
 
 [GitHub Repository](https://github.com/pixiv/three-vrm/tree/dev/packages/types-vrmc-materials-mtoon-1.0)
 
-[Documentation](https://pixiv.github.io/three-vrm/packages/types-vrmc-materials-mtoon-1.0/docs)
+[API Reference](https://pixiv.github.io/three-vrm/docs/modules/types-vrmc-materials-mtoon-1.0)

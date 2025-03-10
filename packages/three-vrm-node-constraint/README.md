@@ -6,4 +6,4 @@ Node constraint module for @pixiv/three-vrm
 
 [Examples](https://pixiv.github.io/three-vrm/packages/three-vrm-node-constraint/examples)
 
-[Documentation](https://pixiv.github.io/three-vrm/packages/three-vrm-node-constraint/docs)
+[API Reference](https://pixiv.github.io/three-vrm/docs/modules/three-vrm-node-constraint)

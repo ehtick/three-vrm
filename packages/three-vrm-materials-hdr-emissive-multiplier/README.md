@@ -6,4 +6,4 @@ Support `VRMC_hdr_emissiveMultiplier` for @pixiv/three-vrm
 
 [Examples](https://pixiv.github.io/three-vrm/packages/three-vrm-materials-hdr-emissive-multiplier/examples)
 
-[Documentation](https://pixiv.github.io/three-vrm/packages/three-vrm-materials-hdr-emissive-multiplier/docs)
+[API Reference](https://pixiv.github.io/three-vrm/docs/modules/three-vrm-materials-hdr-emissive-multiplier)

@@ -6,4 +6,4 @@ The implementation of VRM Animation
 
 [Examples](https://pixiv.github.io/three-vrm/packages/three-vrm-animation/examples)
 
-[Documentation](https://pixiv.github.io/three-vrm/packages/three-vrm-animation/docs)
+[API Reference](https://pixiv.github.io/three-vrm/docs/modules/three-vrm-animation)

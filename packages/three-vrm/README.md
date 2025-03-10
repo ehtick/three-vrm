@@ -10,9 +10,9 @@ Use [VRM](https://vrm.dev/) on [three.js](https://threejs.org/)
 
 [Examples](https://pixiv.github.io/three-vrm/packages/three-vrm/examples)
 
-[Documentations](https://github.com/pixiv/three-vrm/tree/dev/docs/README.md)
+[Guides](https://github.com/pixiv/three-vrm/tree/dev/guides)
 
-[API Reference](https://pixiv.github.io/three-vrm/packages/three-vrm/docs)
+[API Reference](https://pixiv.github.io/three-vrm/docs/modules/three-vrm)
 
 ## How to Use
 

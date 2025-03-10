@@ -6,4 +6,4 @@ Spring bone module for @pixiv/three-vrm
 
 [Examples](https://pixiv.github.io/three-vrm/packages/three-vrm-springbone/examples)
 
-[Documentation](https://pixiv.github.io/three-vrm/packages/three-vrm-springbone/docs)
+[API Reference](https://pixiv.github.io/three-vrm/docs/modules/three-vrm-springbone)
