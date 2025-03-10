@@ -157,7 +157,7 @@ jobs:
         name: build
         path: packages
     - name: Build Docs
-      run: yarn docs-legacy
+      run: DOCS_ROOT='https://pixiv.github.io/three-vrm/docs' yarn docs-legacy
     - name: Upload Docs
       uses: actions/upload-artifact@v4
       with:

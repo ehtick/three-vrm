@@ -3,6 +3,8 @@
 
 import { PageEvent } from 'typedoc';
 
+const DOCS_ROOT = process.env.DOCS_ROOT || '/docs';
+
 /**
  * Replace the input path with the new path.
  * @param {string} path The legacy path
@@ -15,7 +17,7 @@ function replacePath(path) {
   const matchItems = path.match(/packages\/(.+)\/docs\/(classes|interfaces|functions|types|variables)\/(.+)/);
   if (matchItems != null) {
     const [_, packageName, kind, item] = matchItems;
-    return `../../../docs/${kind}/${packageName}.${item}`;
+    return `${DOCS_ROOT}/${kind}/${packageName}.${item}`;
   }
 
   // Hierarchy page
@@ -23,7 +25,7 @@ function replacePath(path) {
   // After: /docs/hierarchy.html
   const matchHierarchy = path.match(/packages\/(.+)\/docs\/hierarchy/);
   if (matchHierarchy != null) {
-    return '../../../docs/hierarchy.html';
+    return `${DOCS_ROOT}/hierarchy.html`;
   }
 
   // Package root page (index.html or modules.html)
@@ -32,11 +34,11 @@ function replacePath(path) {
   const matchRoot = path.match(/packages\/(.+)\/docs\//);
   if (matchRoot != null) {
     const [_, packageName] = matchRoot;
-    return `../../../docs/modules/${packageName}.html`;
+    return `${DOCS_ROOT}/modules/${packageName}.html`;
   }
 
   // I don't think it will reach here but return the root of the docs just in case
-  return '../../../docs/index.html';
+  return `${DOCS_ROOT}/index.html`;
 }
 
 const PAGE_TEMPLATE = `<!DOCTYPE html>
