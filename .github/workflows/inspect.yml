@@ -199,7 +199,7 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: docs
-        path: public
+        path: public/docs
     - name: Download Docs (legacy)
       uses: actions/download-artifact@v4
       with:
