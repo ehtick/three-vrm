@@ -11,15 +11,26 @@ import * as THREE from 'three';
 export function combineSkeletons(root: THREE.Object3D): void {
   const skinnedMeshes = collectSkinnedMeshes(root);
 
+  /** A set of geometries in the given {@link root}. */
+  const geometries = new Set<THREE.BufferGeometry>();
+  for (const mesh of skinnedMeshes) {
+    // meshes sometimes share the same geometry
+    // we don't want to touch the same attribute twice, so we clone the geometries
+    if (geometries.has(mesh.geometry)) {
+      mesh.geometry = shallowCloneBufferGeometry(mesh.geometry);
+    }
+
+    geometries.add(mesh.geometry);
+  }
+
   // List all used skin indices for each skin index attribute
   /** A map: skin index attribute -> skin weight attribute -> used index set */
   const attributeUsedIndexSetMap = new Map<
     THREE.BufferAttribute | THREE.InterleavedBufferAttribute,
     Map<THREE.BufferAttribute | THREE.InterleavedBufferAttribute, Set<number>>
   >();
-  for (const mesh of skinnedMeshes) {
-    const geometry = mesh.geometry;
 
+  for (const geometry of geometries) {
     const skinIndexAttr = geometry.getAttribute('skinIndex');
     const skinIndexMap = attributeUsedIndexSetMap.get(skinIndexAttr) ?? new Map();
     attributeUsedIndexSetMap.set(skinIndexAttr, skinIndexMap);
@@ -92,9 +103,11 @@ export function combineSkeletons(root: THREE.Object3D): void {
       const bones = mesh.skeleton.bones;
       const bonesKey = bones.map((bone) => boneDispatcher.getOrCreate(bone)).join(',');
 
+      // create a key from conditions and check if we already have a remapped skin index attribute
       const key = `${skinIndexKey};${skeletonKey};${bonesKey}`;
       let newSkinIndexAttr = cache.get(key);
 
+      // if we don't have a remapped skin index attribute, create one
       if (newSkinIndexAttr == null) {
         newSkinIndexAttr = skinIndexAttr.clone();
         remapSkinIndexAttribute(newSkinIndexAttr, bones, newBones);
@@ -286,4 +299,43 @@ class ObjectIndexDispatcher<T> {
 
     return index;
   }
+}
+
+/**
+ * Shallow clone a buffer geometry.
+ * `BufferGeometry#clone` does a deep clone that also copies the attributes.
+ * We want to shallow clone the geometry to avoid copying the attributes.
+ *
+ * See: https://github.com/mrdoob/three.js/blob/r175/src/core/BufferGeometry.js#L1330
+ */
+function shallowCloneBufferGeometry(geometry: THREE.BufferGeometry): THREE.BufferGeometry {
+  const clone = new THREE.BufferGeometry();
+
+  clone.name = geometry.name;
+
+  clone.setIndex(geometry.index);
+
+  for (const [name, attribute] of Object.entries(geometry.attributes)) {
+    clone.setAttribute(name, attribute);
+  }
+
+  for (const [name, morphAttribute] of Object.entries(geometry.morphAttributes)) {
+    clone.morphAttributes[name] = morphAttribute.concat();
+  }
+  clone.morphTargetsRelative = geometry.morphTargetsRelative;
+
+  clone.groups = [];
+  for (const group of geometry.groups) {
+    clone.addGroup(group.start, group.count, group.materialIndex);
+  }
+
+  clone.boundingSphere = geometry.boundingSphere?.clone() ?? null;
+  clone.boundingBox = geometry.boundingBox?.clone() ?? null;
+
+  clone.drawRange.start = geometry.drawRange.start;
+  clone.drawRange.count = geometry.drawRange.count;
+
+  clone.userData = geometry.userData;
+
+  return clone;
 }
