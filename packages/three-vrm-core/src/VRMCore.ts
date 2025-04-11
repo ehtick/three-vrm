@@ -51,7 +51,7 @@ export class VRMCore {
   /**
    * Create a new VRM instance.
    *
-   * @param params [[VRMParameters]] that represents components of the VRM
+   * @param params {@link VRMParameters} that represents components of the VRM
    */
   public constructor(params: VRMCoreParameters) {
     this.scene = params.scene;

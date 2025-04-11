@@ -368,7 +368,7 @@ export class MToonMaterial extends THREE.ShaderMaterial {
   }
 
   /**
-   * Readonly boolean that indicates this is a [[MToonMaterial]].
+   * Readonly boolean that indicates this is a {@link MToonMaterial}.
    */
   public get isMToonMaterial(): true {
     return true;

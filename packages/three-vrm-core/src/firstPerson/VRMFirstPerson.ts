@@ -6,14 +6,14 @@ export class VRMFirstPerson {
   /**
    * A default camera layer for `FirstPersonOnly` layer.
    *
-   * @see [[getFirstPersonOnlyLayer]]
+   * @see {@link firstPersonOnlyLayer}
    */
   public static readonly DEFAULT_FIRSTPERSON_ONLY_LAYER = 9;
 
   /**
    * A default camera layer for `ThirdPersonOnly` layer.
    *
-   * @see [[getThirdPersonOnlyLayer]]
+   * @see {@link thirdPersonOnlyLayer}
    */
   public static readonly DEFAULT_THIRDPERSON_ONLY_LAYER = 10;
 
@@ -32,7 +32,7 @@ export class VRMFirstPerson {
    * Create a new VRMFirstPerson object.
    *
    * @param humanoid A {@link VRMHumanoid}
-   * @param meshAnnotations A renderer settings. See the description of [[RendererFirstPersonFlags]] for more info
+   * @param meshAnnotations A {@link VRMFirstPersonMeshAnnotation}
    */
   public constructor(humanoid: VRMHumanoid, meshAnnotations: VRMFirstPersonMeshAnnotation[]) {
     this.humanoid = humanoid;
