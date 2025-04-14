@@ -1,5 +1,7 @@
+import type { VRMPose } from './VRMPose';
+
 /**
- * Represents a transform of a single bone of [[VRMPose]].
+ * Represents a transform of a single bone of {@link VRMPose}.
  * Both `position` and `rotation` are optional.
  */
 export interface VRMPoseTransform {

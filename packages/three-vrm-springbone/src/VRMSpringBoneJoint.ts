@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { Matrix4InverseCache } from './utils/Matrix4InverseCache';
 import type { VRMSpringBoneColliderGroup } from './VRMSpringBoneColliderGroup';
 import type { VRMSpringBoneJointSettings } from './VRMSpringBoneJointSettings';
+import type { VRMSpringBoneManager } from './VRMSpringBoneManager';
 
 // based on
 // http://rocketjump.skr.jp/unity3d/109/
@@ -27,7 +28,7 @@ const _matA = new THREE.Matrix4();
 
 /**
  * A class represents a single joint of a spring bone.
- * It should be managed by a [[VRMSpringBoneManager]].
+ * It should be managed by a {@link VRMSpringBoneManager}.
  */
 export class VRMSpringBoneJoint {
   /**
@@ -205,7 +206,7 @@ export class VRMSpringBoneJoint {
 
   /**
    * Reset the state of this bone.
-   * You might want to call [[VRMSpringBoneManager.reset]] instead.
+   * You might want to call {@link VRMSpringBoneManager.reset} instead.
    */
   public reset(): void {
     this.bone.quaternion.copy(this._initialLocalRotation);
@@ -222,7 +223,7 @@ export class VRMSpringBoneJoint {
 
   /**
    * Update the state of this bone.
-   * You might want to call [[VRMSpringBoneManager.update]] instead.
+   * You might want to call {@link VRMSpringBoneManager.update} instead.
    *
    * @param delta deltaTime
    */

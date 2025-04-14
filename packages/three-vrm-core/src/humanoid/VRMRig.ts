@@ -114,7 +114,7 @@ export class VRMRig {
    * Each transform have to be a local transform relative from rest pose (T-pose).
    * You can pass what you got from {@link getPose}.
    *
-   * @param poseObject A [[VRMPose]] that represents a single pose
+   * @param poseObject A {@link VRMPose} that represents a single pose
    */
   public setPose(poseObject: VRMPose): void {
     Object.entries(poseObject).forEach(([boneNameString, state]) => {
