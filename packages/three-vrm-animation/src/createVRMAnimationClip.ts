@@ -130,7 +130,7 @@ export function createVRMAnimationClip(vrmAnimation: VRMAnimation, vrm: VRMCore)
       proxy = new VRMLookAtQuaternionProxy(vrm.lookAt);
       proxy.name = 'VRMLookAtQuaternionProxy';
       vrm.scene.add(proxy);
-    } else if (proxy.name == null) {
+    } else if (proxy.name === '') {
       // if found but name is not set, set the name automatically
       console.warn(
         'createVRMAnimationClip: VRMLookAtQuaternionProxy is found but its name is not set. Setting the name automatically. To suppress this warning, set the name manually',
