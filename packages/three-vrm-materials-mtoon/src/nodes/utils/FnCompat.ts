@@ -1,4 +1,5 @@
-import * as THREE from 'three/webgpu';
+import * as THREE_TSL from 'three/tsl';
+import * as THREE_WEBGPU from 'three/webgpu';
 
 /**
  * A compat function for `Fn()` / `tslFn()`.
@@ -8,13 +9,13 @@ import * as THREE from 'three/webgpu';
  * See: https://github.com/mrdoob/three.js/pull/29064
  */
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const FnCompat: typeof THREE.Fn = (jsFunc: any) => {
+export const FnCompat: typeof THREE_TSL.Fn = (jsFunc: any) => {
   // COMPAT r168: `tslFn()` has been renamed to `Fn()`
   // See: https://github.com/mrdoob/three.js/pull/29064
-  const threeRevision = parseInt(THREE.REVISION, 10);
+  const threeRevision = parseInt(THREE_WEBGPU.REVISION, 10);
   if (threeRevision >= 168) {
-    return THREE.Fn(jsFunc);
+    return (THREE_TSL as any).Fn(jsFunc);
   } else {
-    return (THREE as any).tslFn(jsFunc);
+    return (THREE_WEBGPU as any).tslFn(jsFunc);
   }
 };

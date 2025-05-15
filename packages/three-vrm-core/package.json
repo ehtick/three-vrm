@@ -54,8 +54,8 @@
     "@pixiv/types-vrmc-vrm-1.0": "3.4.0"
   },
   "devDependencies": {
-    "@types/three": "^0.169.0",
-    "three": "^0.169.0"
+    "@types/three": "^0.170.0",
+    "three": "^0.171.0"
   },
   "peerDependencies": {
     "three": ">=0.137"
