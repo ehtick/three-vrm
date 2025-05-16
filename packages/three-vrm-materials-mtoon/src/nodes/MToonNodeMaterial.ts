@@ -7,6 +7,7 @@ import {
   materialNormal,
   mix,
   modelNormalMatrix,
+  modelViewMatrix,
   normalLocal,
   normalMap,
   positionLocal,
@@ -379,6 +380,11 @@ export class MToonNodeMaterial extends THREE.NodeMaterial {
         this.positionNode = (this.positionNode as THREE.ShaderNodeObject<THREE.Node>).add(outlineOffset);
       } else if (this.outlineWidthMode === MToonMaterialOutlineWidthMode.ScreenCoordinates) {
         const clipScale = cameraProjectionMatrix.element(1).element(1);
+
+        // We can't use `positionView` in `setupPosition`
+        // because using `positionView` here will make it calculate the `positionView` earlier
+        // and it won't be calculated again after setting the `positionNode`
+        const tempPositionView = modelViewMatrix.mul(positionLocal);
 
         // See about the type assertion: https://github.com/three-types/three-ts-types/pull/1123
         this.positionNode = (this.positionNode as THREE.ShaderNodeObject<THREE.Node>).add(
