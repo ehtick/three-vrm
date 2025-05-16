@@ -70,7 +70,12 @@ export class MToonLightingModel extends THREE.LightingModel {
     super();
   }
 
-  direct({ lightDirection, lightColor, reflectedLight }: THREE.LightingModelDirectInput) {
+  // TODO: Add `lightDirection` and `lightColor` to `LightingModelDirectInput` in `@types/three`
+  direct({
+    lightDirection,
+    lightColor,
+    reflectedLight,
+  }: THREE.LightingModelDirectInput & { lightDirection: THREE.Node; lightColor: THREE.Node }) {
     const dotNL = transformedNormalView.dot(lightDirection).clamp(-1.0, 1.0);
 
     // toon diffuse
@@ -101,12 +106,21 @@ export class MToonLightingModel extends THREE.LightingModel {
     );
   }
 
-  indirect(context: THREE.LightingModelIndirectInput) {
+  // `builderOrContext`: `builder: THREE.NodeBuilder` in >= r174,
+  // `context: THREE.LightingModelIndirectInput` otherwise
+  //
+  // TODO: Add `context` to `NodeBuilder` in `@types/three`
+  indirect(builderOrContext: any) {
+    const context: THREE.LightingContext = builderOrContext.context || builderOrContext;
+
     this.indirectDiffuse(context);
     this.indirectSpecular(context);
   }
 
-  indirectDiffuse({ irradiance, reflectedLight }: THREE.LightingModelIndirectInput) {
+  // TODO: Add `context` to `NodeBuilder` in `@types/three`
+  indirectDiffuse(context: THREE.LightingContext) {
+    const { irradiance, reflectedLight } = context;
+
     // indirect irradiance
     (reflectedLight.indirectDiffuse as THREE.ShaderNodeObject<THREE.Node>).assign(
       (reflectedLight.indirectDiffuse as THREE.ShaderNodeObject<THREE.Node>).add(
@@ -115,7 +129,10 @@ export class MToonLightingModel extends THREE.LightingModel {
     );
   }
 
-  indirectSpecular({ reflectedLight }: THREE.LightingModelIndirectInput) {
+  // TODO: Add `context` to `NodeBuilder` in `@types/three`
+  indirectSpecular(context: THREE.LightingContext) {
+    const { reflectedLight } = context;
+
     // rim
     (reflectedLight.indirectSpecular as THREE.ShaderNodeObject<THREE.Node>).assign(
       (reflectedLight.indirectSpecular as THREE.ShaderNodeObject<THREE.Node>).add(
