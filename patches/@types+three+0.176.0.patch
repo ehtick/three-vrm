@@ -1,3 +1,20 @@
+diff --git a/node_modules/@types/three/src/animation/tracks/QuaternionKeyframeTrack.d.ts b/node_modules/@types/three/src/animation/tracks/QuaternionKeyframeTrack.d.ts
+index 1467ab3..f1b9eac 100644
+--- a/node_modules/@types/three/src/animation/tracks/QuaternionKeyframeTrack.d.ts
++++ b/node_modules/@types/three/src/animation/tracks/QuaternionKeyframeTrack.d.ts
+@@ -9,9 +9,9 @@ export class QuaternionKeyframeTrack extends KeyframeTrack {
+      * Constructs a new Quaternion keyframe track.
+      *
+      * @param {string} name - The keyframe track's name.
+-     * @param {Array<number>} times - A list of keyframe times.
+-     * @param {Array<number>} values - A list of keyframe values.
++     * @param {ArrayLike<number>} times - A list of keyframe times.
++     * @param {ArrayLike<number>} values - A list of keyframe values.
+      * @param {(InterpolateLinear|InterpolateDiscrete|InterpolateSmooth)} [interpolation] - The interpolation type.
+      */
+-    constructor(name: string, times: Array<number>, values: Array<number>, interpolation?: InterpolationModes);
++    constructor(name: string, times: ArrayLike<number>, values: ArrayLike<number>, interpolation?: InterpolationModes);
+ }
 diff --git a/node_modules/@types/three/src/core/BufferGeometry.d.ts b/node_modules/@types/three/src/core/BufferGeometry.d.ts
 index 0f129f1..153a564 100644
 --- a/node_modules/@types/three/src/core/BufferGeometry.d.ts
