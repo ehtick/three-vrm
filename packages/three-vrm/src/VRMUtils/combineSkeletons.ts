@@ -319,8 +319,9 @@ function shallowCloneBufferGeometry(geometry: THREE.BufferGeometry): THREE.Buffe
     clone.setAttribute(name, attribute);
   }
 
-  for (const [name, morphAttribute] of Object.entries(geometry.morphAttributes)) {
-    clone.morphAttributes[name] = morphAttribute.concat();
+  for (const [key, morphAttributes] of Object.entries(geometry.morphAttributes)) {
+    const attributeName = key as keyof typeof geometry.morphAttributes;
+    clone.morphAttributes[attributeName] = morphAttributes.concat();
   }
   clone.morphTargetsRelative = geometry.morphTargetsRelative;
 
