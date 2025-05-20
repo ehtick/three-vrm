@@ -1,5 +1,5 @@
 import * as THREE from 'three/webgpu';
-import { BRDF_Lambert, diffuseColor, float, mix, transformedNormalView, vec3 } from 'three/tsl';
+import { BRDF_Lambert, diffuseColor, float, mix, ShaderNodeObject, transformedNormalView, vec3 } from 'three/tsl';
 import {
   matcap,
   parametricRim,
@@ -19,9 +19,9 @@ const linearstep = FnCompat(
     b,
     t,
   }: {
-    a: THREE.ShaderNodeObject<THREE.Node>;
-    b: THREE.ShaderNodeObject<THREE.Node>;
-    t: THREE.ShaderNodeObject<THREE.Node>;
+    a: ShaderNodeObject<THREE.Node>;
+    b: ShaderNodeObject<THREE.Node>;
+    t: ShaderNodeObject<THREE.Node>;
   }) => {
     const top = t.sub(a);
     const bottom = b.sub(a);
@@ -32,12 +32,12 @@ const linearstep = FnCompat(
 /**
  * Convert NdotL into toon shading factor using shadingShift and shadingToony
  */
-const getShading = FnCompat(({ dotNL }: { dotNL: THREE.ShaderNodeObject<THREE.Node> }) => {
+const getShading = FnCompat(({ dotNL }: { dotNL: ShaderNodeObject<THREE.Node> }) => {
   const shadow = 1.0; // TODO
 
   const feather = float(1.0).sub(shadingToony);
 
-  let shading: THREE.ShaderNodeObject<THREE.Node> = dotNL.add(shadingShift);
+  let shading: ShaderNodeObject<THREE.Node> = dotNL.add(shadingShift);
   shading = linearstep({
     a: feather.negate(),
     b: feather,
@@ -51,13 +51,7 @@ const getShading = FnCompat(({ dotNL }: { dotNL: THREE.ShaderNodeObject<THREE.No
  * Mix diffuseColor and shadeColor using shading factor and light color
  */
 const getDiffuse = FnCompat(
-  ({
-    shading,
-    lightColor,
-  }: {
-    shading: THREE.ShaderNodeObject<THREE.Node>;
-    lightColor: THREE.ShaderNodeObject<THREE.Node>;
-  }) => {
+  ({ shading, lightColor }: { shading: ShaderNodeObject<THREE.Node>; lightColor: ShaderNodeObject<THREE.Node> }) => {
     const feathered = mix(shadeColor, diffuseColor, shading);
     const col = lightColor.mul(BRDF_Lambert({ diffuseColor: feathered }));
 
@@ -86,18 +80,18 @@ export class MToonLightingModel extends THREE.LightingModel {
     // Unable to use `addAssign` in the current @types/three, we use `assign` and `add` instead
     // TODO: Fix the `addAssign` issue from the `@types/three` side
 
-    (reflectedLight.directDiffuse as THREE.ShaderNodeObject<THREE.Node>).assign(
-      (reflectedLight.directDiffuse as THREE.ShaderNodeObject<THREE.Node>).add(
+    (reflectedLight.directDiffuse as ShaderNodeObject<THREE.Node>).assign(
+      (reflectedLight.directDiffuse as ShaderNodeObject<THREE.Node>).add(
         getDiffuse({
           shading,
-          lightColor: lightColor as THREE.ShaderNodeObject<THREE.Node>,
+          lightColor: lightColor as ShaderNodeObject<THREE.Node>,
         }),
       ),
     );
 
     // rim
-    (reflectedLight.directSpecular as THREE.ShaderNodeObject<THREE.Node>).assign(
-      (reflectedLight.directSpecular as THREE.ShaderNodeObject<THREE.Node>).add(
+    (reflectedLight.directSpecular as ShaderNodeObject<THREE.Node>).assign(
+      (reflectedLight.directSpecular as ShaderNodeObject<THREE.Node>).add(
         parametricRim
           .add(matcap)
           .mul(rimMultiply)
@@ -122,9 +116,9 @@ export class MToonLightingModel extends THREE.LightingModel {
     const { irradiance, reflectedLight } = context;
 
     // indirect irradiance
-    (reflectedLight.indirectDiffuse as THREE.ShaderNodeObject<THREE.Node>).assign(
-      (reflectedLight.indirectDiffuse as THREE.ShaderNodeObject<THREE.Node>).add(
-        (irradiance as THREE.ShaderNodeObject<THREE.Node>).mul(BRDF_Lambert({ diffuseColor })),
+    (reflectedLight.indirectDiffuse as ShaderNodeObject<THREE.Node>).assign(
+      (reflectedLight.indirectDiffuse as ShaderNodeObject<THREE.Node>).add(
+        (irradiance as ShaderNodeObject<THREE.Node>).mul(BRDF_Lambert({ diffuseColor })),
       ),
     );
   }
@@ -134,8 +128,8 @@ export class MToonLightingModel extends THREE.LightingModel {
     const { reflectedLight } = context;
 
     // rim
-    (reflectedLight.indirectSpecular as THREE.ShaderNodeObject<THREE.Node>).assign(
-      (reflectedLight.indirectSpecular as THREE.ShaderNodeObject<THREE.Node>).add(
+    (reflectedLight.indirectSpecular as ShaderNodeObject<THREE.Node>).assign(
+      (reflectedLight.indirectSpecular as ShaderNodeObject<THREE.Node>).add(
         parametricRim
           .add(matcap)
           .mul(rimMultiply)
