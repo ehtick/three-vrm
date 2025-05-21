@@ -76,26 +76,19 @@ export class MToonLightingModel extends THREE.LightingModel {
       dotNL,
     });
 
-    // Unable to use `addAssign` in the current @types/three, we use `assign` and `add` instead
-    // TODO: Fix the `addAssign` issue from the `@types/three` side
-
-    (reflectedLight.directDiffuse as ShaderNodeObject<THREE.Node>).assign(
-      (reflectedLight.directDiffuse as ShaderNodeObject<THREE.Node>).add(
-        getDiffuse({
-          shading,
-          lightColor: lightColor as ShaderNodeObject<THREE.Node>,
-        }),
-      ),
+    (reflectedLight.directDiffuse as ShaderNodeObject<THREE.Node>).addAssign(
+      getDiffuse({
+        shading,
+        lightColor: lightColor as ShaderNodeObject<THREE.Node>,
+      }),
     );
 
     // rim
-    (reflectedLight.directSpecular as ShaderNodeObject<THREE.Node>).assign(
-      (reflectedLight.directSpecular as ShaderNodeObject<THREE.Node>).add(
-        parametricRim
-          .add(matcap)
-          .mul(rimMultiply)
-          .mul(mix(vec3(0.0), BRDF_Lambert({ diffuseColor: lightColor }), rimLightingMix)),
-      ),
+    (reflectedLight.directSpecular as ShaderNodeObject<THREE.Node>).addAssign(
+      parametricRim
+        .add(matcap)
+        .mul(rimMultiply)
+        .mul(mix(vec3(0.0), BRDF_Lambert({ diffuseColor: lightColor }), rimLightingMix)),
     );
   }
 
@@ -113,10 +106,8 @@ export class MToonLightingModel extends THREE.LightingModel {
     const { irradiance, reflectedLight } = context;
 
     // indirect irradiance
-    (reflectedLight.indirectDiffuse as ShaderNodeObject<THREE.Node>).assign(
-      (reflectedLight.indirectDiffuse as ShaderNodeObject<THREE.Node>).add(
-        (irradiance as ShaderNodeObject<THREE.Node>).mul(BRDF_Lambert({ diffuseColor })),
-      ),
+    (reflectedLight.indirectDiffuse as ShaderNodeObject<THREE.Node>).addAssign(
+      (irradiance as ShaderNodeObject<THREE.Node>).mul(BRDF_Lambert({ diffuseColor })),
     );
   }
 
@@ -124,13 +115,11 @@ export class MToonLightingModel extends THREE.LightingModel {
     const { reflectedLight } = context;
 
     // rim
-    (reflectedLight.indirectSpecular as ShaderNodeObject<THREE.Node>).assign(
-      (reflectedLight.indirectSpecular as ShaderNodeObject<THREE.Node>).add(
-        parametricRim
-          .add(matcap)
-          .mul(rimMultiply)
-          .mul(mix(vec3(1.0), vec3(0.0), rimLightingMix)),
-      ),
+    (reflectedLight.indirectSpecular as ShaderNodeObject<THREE.Node>).addAssign(
+      parametricRim
+        .add(matcap)
+        .mul(rimMultiply)
+        .mul(mix(vec3(1.0), vec3(0.0), rimLightingMix)),
     );
   }
 }
