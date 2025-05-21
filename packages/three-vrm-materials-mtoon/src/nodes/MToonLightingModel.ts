@@ -64,7 +64,6 @@ export class MToonLightingModel extends THREE.LightingModel {
     super();
   }
 
-  // TODO: Add `lightDirection` and `lightColor` to `LightingModelDirectInput` in `@types/three`
   direct({
     lightDirection,
     lightColor,
@@ -100,18 +99,16 @@ export class MToonLightingModel extends THREE.LightingModel {
     );
   }
 
-  // `builderOrContext`: `builder: THREE.NodeBuilder` in >= r174,
-  // `context: THREE.LightingModelIndirectInput` otherwise
-  //
-  // TODO: Add `context` to `NodeBuilder` in `@types/three`
-  indirect(builderOrContext: any) {
-    const context: THREE.LightingContext = builderOrContext.context || builderOrContext;
+  // COMPAT: pre-r174
+  // `builderOrContext`: `THREE.NodeBuilder` in >= r174, `LightingModelIndirectInput` (`LightingContext`) otherwise
+  indirect(builderOrContext: THREE.NodeBuilder | THREE.LightingContext) {
+    const context: THREE.LightingContext =
+      'context' in builderOrContext ? (builderOrContext.context as unknown as THREE.LightingContext) : builderOrContext;
 
     this.indirectDiffuse(context);
     this.indirectSpecular(context);
   }
 
-  // TODO: Add `context` to `NodeBuilder` in `@types/three`
   indirectDiffuse(context: THREE.LightingContext) {
     const { irradiance, reflectedLight } = context;
 
@@ -123,7 +120,6 @@ export class MToonLightingModel extends THREE.LightingModel {
     );
   }
 
-  // TODO: Add `context` to `NodeBuilder` in `@types/three`
   indirectSpecular(context: THREE.LightingContext) {
     const { reflectedLight } = context;
 

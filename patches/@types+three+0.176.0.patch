@@ -28,3 +28,29 @@ index 0f129f1..153a564 100644
  
      /**
       * Used to control the morph target behavior; when set to true, the morph target data is treated as relative offsets, rather than as absolute positions/normals.
+diff --git a/node_modules/@types/three/src/nodes/core/LightingModel.d.ts b/node_modules/@types/three/src/nodes/core/LightingModel.d.ts
+index cb894c0..fbbc46f 100644
+--- a/node_modules/@types/three/src/nodes/core/LightingModel.d.ts
++++ b/node_modules/@types/three/src/nodes/core/LightingModel.d.ts
+@@ -10,6 +10,8 @@ export interface LightingModelReflectedLight {
+ }
+ 
+ export interface LightingModelDirectInput extends DirectLightData {
++    lightColor: Node;
++    lightDirection: Node;
+     lightNode: Node;
+     reflectedLight: LightingModelReflectedLight;
+ }
+diff --git a/node_modules/@types/three/src/nodes/core/NodeBuilder.d.ts b/node_modules/@types/three/src/nodes/core/NodeBuilder.d.ts
+index eb477e3..0be5b27 100644
+--- a/node_modules/@types/three/src/nodes/core/NodeBuilder.d.ts
++++ b/node_modules/@types/three/src/nodes/core/NodeBuilder.d.ts
+@@ -49,6 +49,8 @@ export default abstract class NodeBuilder {
+     cache: NodeCache;
+     globalCache: NodeCache;
+ 
++    context: NodeBuilderContext;
++
+     /**
+      * @TODO used to be missing. check the actual type later
+      */
