@@ -391,7 +391,7 @@ export class MToonNodeMaterial extends THREE.NodeMaterial {
 
         // See about the type assertion: https://github.com/three-types/three-ts-types/pull/1123
         this.positionNode = (this.positionNode as ShaderNodeObject<THREE.Node>).add(
-          outlineOffset.div(clipScale).mul(positionView.z.negate()),
+          outlineOffset.div(clipScale).mul(tempPositionView.z.negate()),
         );
       }
 
