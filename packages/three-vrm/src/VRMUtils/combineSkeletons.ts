@@ -1,4 +1,6 @@
 import * as THREE from 'three';
+import { attributeGetComponentCompat } from '../utils/attributeGetComponentCompat';
+import { attributeSetComponentCompat } from '../utils/attributeSetComponentCompat';
 
 /**
  * Traverses the given object and combines the skeletons of skinned meshes.
@@ -156,8 +158,8 @@ function listUsedIndices(
 
   for (let i = 0; i < skinIndexAttr.count; i++) {
     for (let j = 0; j < skinIndexAttr.itemSize; j++) {
-      const index = skinIndexAttr.getComponent(i, j);
-      const weight = skinWeightAttr.getComponent(i, j);
+      const index = attributeGetComponentCompat(skinIndexAttr, i, j);
+      const weight = attributeGetComponentCompat(skinWeightAttr, i, j);
 
       if (weight !== 0) {
         usedIndices.add(index);
@@ -255,9 +257,9 @@ function remapSkinIndexAttribute(
   // replace the skin index attribute with new indices
   for (let i = 0; i < attribute.count; i++) {
     for (let j = 0; j < attribute.itemSize; j++) {
-      const oldIndex = attribute.getComponent(i, j);
+      const oldIndex = attributeGetComponentCompat(attribute, i, j);
       const newIndex = oldToNew.get(oldIndex)!;
-      attribute.setComponent(i, j, newIndex);
+      attributeSetComponentCompat(attribute, i, j, newIndex);
     }
   }
 
