@@ -136,12 +136,13 @@ export function removeUnnecessaryVertices(root: THREE.Object3D): void {
     /** True if all morphs are zero. */
     let isNullMorph = true;
 
-    Object.keys(geometry.morphAttributes).forEach((attributeName) => {
+    for (const [key, morphAttributes] of Object.entries(geometry.morphAttributes)) {
+      const attributeName = key as keyof typeof geometry.morphAttributes;
+
       newGeometry.morphAttributes[attributeName] = [];
 
-      const morphs = geometry.morphAttributes[attributeName];
-      for (let iMorph = 0; iMorph < morphs.length; iMorph++) {
-        const originalAttribute = morphs[iMorph] as THREE.BufferAttribute;
+      for (let iMorph = 0; iMorph < morphAttributes.length; iMorph++) {
+        const originalAttribute = morphAttributes[iMorph] as THREE.BufferAttribute;
 
         if ((originalAttribute as any).isInterleavedBufferAttribute) {
           throw new Error('removeUnnecessaryVertices: InterleavedBufferAttribute is not supported');
@@ -168,7 +169,7 @@ export function removeUnnecessaryVertices(root: THREE.Object3D): void {
           normalized,
         );
       }
-    });
+    }
 
     // If all morphs are zero, just discard the morph attributes we've just made
     if (isNullMorph) {

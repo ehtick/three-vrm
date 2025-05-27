@@ -1,4 +1,6 @@
 import * as THREE from 'three';
+import { attributeGetComponentCompat } from '../utils/attributeGetComponentCompat';
+import { attributeSetComponentCompat } from '../utils/attributeSetComponentCompat';
 
 /**
  * Traverse the given object and remove unnecessarily bound joints from every `THREE.SkinnedMesh`.
@@ -71,7 +73,7 @@ export function removeUnnecessaryJoints(
     // create a new bone map
     for (let i = 0; i < attribute.count; i++) {
       for (let j = 0; j < attribute.itemSize; j++) {
-        const oldIndex = attribute.getComponent(i, j);
+        const oldIndex = attributeGetComponentCompat(attribute, i, j);
         let newIndex = oldToNew.get(oldIndex);
 
         // new skinIndex buffer
@@ -81,7 +83,7 @@ export function removeUnnecessaryJoints(
           newToOld.set(newIndex, oldIndex);
         }
 
-        attribute.setComponent(i, j, newIndex);
+        attributeSetComponentCompat(attribute, i, j, newIndex);
       }
     }
 

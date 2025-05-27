@@ -142,10 +142,10 @@ export function combineMorphs(vrm: VRMCore): void {
       let i = 0;
       for (const [name, bindSet] of nameBindSetMap) {
         if (hasPMorph) {
-          morphAttributes.position[i] = combineMorph(originalMorphAttributes.position, bindSet, morphTargetsRelative);
+          morphAttributes.position![i] = combineMorph(originalMorphAttributes.position!, bindSet, morphTargetsRelative);
         }
         if (hasNMorph) {
-          morphAttributes.normal[i] = combineMorph(originalMorphAttributes.normal, bindSet, morphTargetsRelative);
+          morphAttributes.normal![i] = combineMorph(originalMorphAttributes.normal!, bindSet, morphTargetsRelative);
         }
 
         expressionMap?.[name].addBind(
