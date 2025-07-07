@@ -1,8 +1,8 @@
 diff --git a/node_modules/@types/three/src/animation/tracks/QuaternionKeyframeTrack.d.ts b/node_modules/@types/three/src/animation/tracks/QuaternionKeyframeTrack.d.ts
-index 1467ab3..f1b9eac 100644
+index 4bcaa98..f1b9eac 100644
 --- a/node_modules/@types/three/src/animation/tracks/QuaternionKeyframeTrack.d.ts
 +++ b/node_modules/@types/three/src/animation/tracks/QuaternionKeyframeTrack.d.ts
-@@ -9,9 +9,9 @@ export class QuaternionKeyframeTrack extends KeyframeTrack {
+@@ -9,8 +9,8 @@ export class QuaternionKeyframeTrack extends KeyframeTrack {
       * Constructs a new Quaternion keyframe track.
       *
       * @param {string} name - The keyframe track's name.
@@ -12,22 +12,7 @@ index 1467ab3..f1b9eac 100644
 +     * @param {ArrayLike<number>} values - A list of keyframe values.
       * @param {(InterpolateLinear|InterpolateDiscrete|InterpolateSmooth)} [interpolation] - The interpolation type.
       */
--    constructor(name: string, times: Array<number>, values: Array<number>, interpolation?: InterpolationModes);
-+    constructor(name: string, times: ArrayLike<number>, values: ArrayLike<number>, interpolation?: InterpolationModes);
- }
-diff --git a/node_modules/@types/three/src/core/BufferGeometry.d.ts b/node_modules/@types/three/src/core/BufferGeometry.d.ts
-index 0f129f1..153a564 100644
---- a/node_modules/@types/three/src/core/BufferGeometry.d.ts
-+++ b/node_modules/@types/three/src/core/BufferGeometry.d.ts
-@@ -172,7 +172,7 @@ export class BufferGeometry<
-      * You will have to call {@link dispose | .dispose}(), and create a new instance of {@link THREE.BufferGeometry | BufferGeometry}.
-      * @defaultValue `{}`
-      */
--    morphAttributes: Record<"position" | "normal" | "color", Array<BufferAttribute | InterleavedBufferAttribute>>;
-+    morphAttributes: Partial<Record<"position" | "normal" | "color", Array<BufferAttribute | InterleavedBufferAttribute>>>;
- 
-     /**
-      * Used to control the morph target behavior; when set to true, the morph target data is treated as relative offsets, rather than as absolute positions/normals.
+     constructor(name: string, times: ArrayLike<number>, values: ArrayLike<number>, interpolation?: InterpolationModes);
 diff --git a/node_modules/@types/three/src/nodes/core/LightingModel.d.ts b/node_modules/@types/three/src/nodes/core/LightingModel.d.ts
 index cb894c0..fbbc46f 100644
 --- a/node_modules/@types/three/src/nodes/core/LightingModel.d.ts
