@@ -52,7 +52,6 @@ jobs:
         yarn lerna publish from-git -y --dist-tag ${{ github.event.inputs.distTag }}
       env:
         NPM_CONFIG_PROVENANCE: true
-        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
     - name: Git push version up commits
       run: |
