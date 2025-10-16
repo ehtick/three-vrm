@@ -39,3 +39,15 @@ index eb477e3..0be5b27 100644
      /**
       * @TODO used to be missing. check the actual type later
       */
+diff --git a/node_modules/@types/three/src/nodes/tsl/TSLCore.d.ts b/node_modules/@types/three/src/nodes/tsl/TSLCore.d.ts
+index 0e3c220..ceabbbb 100644
+--- a/node_modules/@types/three/src/nodes/tsl/TSLCore.d.ts
++++ b/node_modules/@types/three/src/nodes/tsl/TSLCore.d.ts
+@@ -391,6 +391,7 @@ export const bvec4: (node: Node) => ShaderNodeObject<Node>;
+ interface Matrix2Function {
+     (value: Matrix2): ShaderNodeObject<ConstNode<Matrix2>>;
+     (node: Node): ShaderNodeObject<Node>;
++    (n11: Node | number, n12: Node | number, n21?: Node | number, n22?: Node | number): ShaderNodeObject<ConstNode<Matrix2>>;
+ }
+ 
+ export const mat2: Matrix2Function;
