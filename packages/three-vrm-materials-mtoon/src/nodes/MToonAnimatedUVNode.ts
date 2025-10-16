@@ -1,5 +1,5 @@
 import * as THREE from 'three/webgpu';
-import { cos, mat2, NodeRepresentation, ShaderNodeObject, sin, Swizzable, uv, vec2, vec4 } from 'three/tsl';
+import { cos, mat2, ShaderNodeObject, sin, Swizzable, uv, vec2, vec4 } from 'three/tsl';
 import {
   refUVAnimationMaskTexture,
   refUVAnimationRotationPhase,
@@ -17,7 +17,7 @@ export class MToonAnimatedUVNode extends THREE.TempNode {
   }
 
   public setup(): ShaderNodeObject<THREE.VarNode> {
-    let uvAnimationMask: NodeRepresentation = 1.0;
+    let uvAnimationMask: THREE.TSL.OperatorNodeParameter = 1.0;
 
     if (this.hasMaskTexture) {
       uvAnimationMask = vec4(refUVAnimationMaskTexture).context({ getUV: () => uv() }).r;
