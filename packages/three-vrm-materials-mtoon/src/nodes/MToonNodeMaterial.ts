@@ -387,7 +387,7 @@ export class MToonNodeMaterial extends THREE.NodeMaterial {
         // See about the type assertion: https://github.com/three-types/three-ts-types/pull/1123
         this.positionNode = (this.positionNode as ShaderNodeObject<THREE.Node>).add(outlineOffset);
       } else if (this.outlineWidthMode === MToonMaterialOutlineWidthMode.ScreenCoordinates) {
-        const clipScale = cameraProjectionMatrix.element(uniform(1)).element(uniform(1));
+        const clipScale = cameraProjectionMatrix.element(1).element(1);
 
         // We can't use `positionView` in `setupPosition`
         // because using `positionView` here will make it calculate the `positionView` earlier
