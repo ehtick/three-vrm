@@ -35,11 +35,12 @@ export class GLTFMToonMaterialParamsAssignHelper {
     convertSRGBToLinear?: boolean,
   ): void {
     if (value != null) {
-      this._materialParams[key] = new THREE.Color().fromArray(value);
+      const color = new THREE.Color().fromArray(value);
 
       if (convertSRGBToLinear) {
-        this._materialParams[key].convertSRGBToLinear();
+        color.convertSRGBToLinear();
       }
+      (this._materialParams as any)[key] = color;
     }
   }
 
@@ -53,7 +54,7 @@ export class GLTFMToonMaterialParamsAssignHelper {
         await this._parser.assignTexture(this._materialParams, key, texture);
 
         if (isColorTexture) {
-          setTextureColorSpace(this._materialParams[key], 'srgb');
+          setTextureColorSpace(this._materialParams[key] as THREE.Texture, 'srgb');
         }
       }
     })();

@@ -15,6 +15,7 @@ import {
   positionView,
   ShaderNodeObject,
   Swizzable,
+  uniform,
   vec3,
   vec4,
 } from 'three/tsl';
@@ -271,7 +272,9 @@ export class MToonNodeMaterial extends THREE.NodeMaterial {
     parametricRim.assign(this._setupParametricRimNode());
   }
 
-  public setupNormal(builder: THREE.NodeBuilder): ShaderNodeObject<THREE.Node> {
+  public setupNormal(): ShaderNodeObject<THREE.Node>;
+  public setupNormal(builder?: THREE.NodeBuilder): ShaderNodeObject<THREE.Node>;
+  public setupNormal(builder?: THREE.NodeBuilder): ShaderNodeObject<THREE.Node> {
     // we must apply uv scroll to the normalMap
     // this.normalNode will be used in super.setupNormal() so we temporarily replace it
     const tempNormalNode = this.normalNode;
@@ -304,6 +307,8 @@ export class MToonNodeMaterial extends THREE.NodeMaterial {
     } else {
       // pre-r168
       // the ordinary normal setup
+
+      // @ts-expect-error type workaround for pre-r168
       super.setupNormal(builder);
 
       // revert the normalNode

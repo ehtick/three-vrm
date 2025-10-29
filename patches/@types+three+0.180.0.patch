@@ -39,3 +39,34 @@ index eb477e3..0be5b27 100644
      /**
       * @TODO used to be missing. check the actual type later
       */
+diff --git a/node_modules/@types/three/src/nodes/tsl/TSLCore.d.ts b/node_modules/@types/three/src/nodes/tsl/TSLCore.d.ts
+index 0e3c220..30f3901 100644
+--- a/node_modules/@types/three/src/nodes/tsl/TSLCore.d.ts
++++ b/node_modules/@types/three/src/nodes/tsl/TSLCore.d.ts
+@@ -391,6 +391,7 @@ export const bvec4: (node: Node) => ShaderNodeObject<Node>;
+ interface Matrix2Function {
+     (value: Matrix2): ShaderNodeObject<ConstNode<Matrix2>>;
+     (node: Node): ShaderNodeObject<Node>;
++    (n11: Node | number, n12: Node | number, n21?: Node | number, n22?: Node | number): ShaderNodeObject<ConstNode<Matrix2>>;
+ }
+ 
+ export const mat2: Matrix2Function;
+@@ -443,7 +444,7 @@ export const mat4: Matrix4Function;
+ export const string: (value?: string) => ShaderNodeObject<ConstNode<string>>;
+ export const arrayBuffer: (value: ArrayBuffer) => ShaderNodeObject<ConstNode<ArrayBuffer>>;
+ 
+-export const element: (node: Node, indexNode: Node) => ShaderNodeObject<Node>;
++export const element: (node: Node | number, indexNode: Node | number) => ShaderNodeObject<Node>;
+ export const convert: (node: Node, types: string) => ShaderNodeObject<Node>;
+ export const split: (node: Node, channels?: string) => ShaderNodeObject<Node>;
+ 
+diff --git a/node_modules/@types/three/src/textures/ExternalTexture.d.ts b/node_modules/@types/three/src/textures/ExternalTexture.d.ts
+index 8f62cac..0e0d807 100644
+--- a/node_modules/@types/three/src/textures/ExternalTexture.d.ts
++++ b/node_modules/@types/three/src/textures/ExternalTexture.d.ts
+@@ -1,3 +1,5 @@
++/// <reference types="@webgpu/types" />
++
+ import { Texture } from "./Texture.js";
+ 
+ declare class ExternalTexture extends Texture {
