@@ -42,7 +42,7 @@
     "ts-jest": "^29.1.2",
     "ts-node": "^10.9.2",
     "typedoc": "^0.28.1",
-    "typescript": "^5.4.5",
+    "typescript": "^5.9.3",
     "typescript-eslint": "^8.18.2"
   },
   "name": "three-vrm"
