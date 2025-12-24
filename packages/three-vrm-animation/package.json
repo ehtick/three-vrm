@@ -52,7 +52,6 @@
   },
   "devDependencies": {
     "@types/three": "^0.180.0",
-    "lint-staged": "16.1.2",
     "three": "^0.180.0"
   },
   "peerDependencies": {
