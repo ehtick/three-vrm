@@ -34,7 +34,7 @@
     "globals": "^16.0.0",
     "husky": "^9.1.5",
     "jest": "^30.2.0",
-    "lerna": "^9.0.0",
+    "lerna": "^9.0.3",
     "lint-staged": "^16.2.7",
     "patch-package": "^8.0.0",
     "prettier": "^3.3.3",
