@@ -18,7 +18,6 @@ export default tseslint.config(
 
       'packages/*/examples/**/*.{js,html}',
 
-      '**/jest.config.js',
     ],
     extends: [
       eslint.configs.recommended,

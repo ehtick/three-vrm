@@ -1,10 +1,7 @@
-/* eslint-env jest */
-
+import { beforeEach, describe, expect, it } from 'vitest';
 import * as THREE from 'three';
-import { toBeCloseToQuaternion } from './matchers/toBeCloseToQuaternion';
 import { VRMRollConstraint } from '../VRMRollConstraint';
-
-expect.extend({ toBeCloseToQuaternion });
+import './matchers/toBeCloseToQuaternion';
 
 /**
  * No rotation

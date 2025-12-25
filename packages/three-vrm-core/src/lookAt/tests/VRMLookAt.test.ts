@@ -1,10 +1,11 @@
+import { beforeEach, describe, expect, it } from 'vitest';
 import * as THREE from 'three';
 import { VRMHumanBoneName, VRMHumanBoneParentMap, VRMHumanBones, VRMHumanoid } from '../../humanoid';
 import { VRMLookAt } from '../VRMLookAt';
 import { VRMLookAtBoneApplier } from '../VRMLookAtBoneApplier';
 import { VRMLookAtRangeMap } from '../VRMLookAtRangeMap';
-import { toBeCloseToQuaternion } from '../../tests/matchers/toBeCloseToQuaternion';
-import { toBeCloseToVector3 } from '../../tests/matchers/toBeCloseToVector3';
+import '../../tests/matchers/toBeCloseToQuaternion';
+import '../../tests/matchers/toBeCloseToVector3';
 
 // This is not a proper test!
 // We are currently looking for a solution for an issue under the specific case
@@ -14,10 +15,6 @@ const VEC3_POSITIVE_X = new THREE.Vector3(1.0, 0.0, 0.0);
 const VEC3_POSITIVE_Z = new THREE.Vector3(0.0, 0.0, 1.0);
 const QUAT_Y_CW90 = new THREE.Quaternion(0, -SQRT_2_OVER_2, 0, SQRT_2_OVER_2);
 const QUAT_Y_CCW90 = new THREE.Quaternion(0, SQRT_2_OVER_2, 0, SQRT_2_OVER_2);
-
-beforeEach(() => {
-  expect.extend({ toBeCloseToQuaternion, toBeCloseToVector3 });
-});
 
 function createHumanoid(): VRMHumanoid {
   // create humanBones
