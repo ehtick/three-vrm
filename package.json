@@ -25,6 +25,7 @@
     "@eslint/js": "^9.17.0",
     "@gltf-transform/core": "^4.2.1",
     "@types/node": "^24.0.7",
+    "@vitest/coverage-v8": "^4.0.16",
     "cross-env": "^10.1.0",
     "esbuild": "^0.27.2",
     "eslint": "^9.39.2",
@@ -37,11 +38,11 @@
     "patch-package": "^8.0.0",
     "prettier": "^3.3.3",
     "rimraf": "^6.0.1",
-    "vitest": "^4.0.16",
     "ts-node": "^10.9.2",
     "typedoc": "^0.28.15",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.18.2"
+    "typescript-eslint": "^8.18.2",
+    "vitest": "^4.0.16"
   },
   "name": "three-vrm"
 }
