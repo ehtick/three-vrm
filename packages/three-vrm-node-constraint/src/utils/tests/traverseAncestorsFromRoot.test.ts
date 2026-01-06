@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { describe, expect, it } from 'vitest';
 import { traverseAncestorsFromRoot } from '../traverseAncestorsFromRoot';
 
 describe('traverseAncestorsFromRoot', () => {

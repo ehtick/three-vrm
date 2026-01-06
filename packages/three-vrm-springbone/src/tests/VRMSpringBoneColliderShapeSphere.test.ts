@@ -1,13 +1,8 @@
-/* eslint-env jest */
-
+import { describe, expect, it } from 'vitest';
 import * as THREE from 'three';
 import { VRMSpringBoneColliderShapeSphere } from '../VRMSpringBoneColliderShapeSphere';
-import { toBeCloseToArray } from './matchers/toBeCloseToArray';
-import { toBeCloseToVector3 } from './matchers/toBeCloseToVector3';
-
-beforeEach(() => {
-  expect.extend({ toBeCloseToArray, toBeCloseToVector3 });
-});
+import './matchers/toBeCloseToArray';
+import './matchers/toBeCloseToVector3';
 
 describe('VRMSpringBoneColliderShapeSphere', () => {
   it('must be instantiated properly', () => {

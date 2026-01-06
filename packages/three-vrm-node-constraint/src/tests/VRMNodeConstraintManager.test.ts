@@ -1,5 +1,4 @@
-/* eslint-env jest */
-
+import { beforeEach, describe, expect, it } from 'vitest';
 import * as THREE from 'three';
 import { VRMNodeConstraintManager } from '../VRMNodeConstraintManager';
 import { VRMMockedConstraint } from './VRMMockedConstraint';
