@@ -601,7 +601,12 @@ void main() {
   #if ( NUM_SPOT_LIGHTS > 0 ) && defined( RE_Direct )
 
     SpotLight spotLight;
-    #if defined( USE_SHADOWMAP ) && NUM_SPOT_LIGHT_SHADOWS > 0
+    // COMPAT: pre-r144 uses NUM_SPOT_LIGHT_SHADOWS, r144+ uses NUM_SPOT_LIGHT_COORDS
+    #if THREE_VRM_THREE_REVISION >= 144
+      #if defined( USE_SHADOWMAP ) && NUM_SPOT_LIGHT_COORDS > 0
+      SpotLightShadow spotLightShadow;
+      #endif
+    #elif defined( USE_SHADOWMAP ) && NUM_SPOT_LIGHT_SHADOWS > 0
     SpotLightShadow spotLightShadow;
     #endif
 
@@ -618,15 +623,21 @@ void main() {
       #endif
 
       shadow = 1.0;
-      #if defined( USE_SHADOWMAP ) && ( UNROLLED_LOOP_INDEX < NUM_SPOT_LIGHT_SHADOWS )
-      spotLightShadow = spotLightShadows[ i ];
-      // COMPAT: pre-r166
-      // r166 introduced shadowIntensity
+      // COMPAT: pre-r144 uses NUM_SPOT_LIGHT_SHADOWS and vSpotShadowCoord, r144+ uses NUM_SPOT_LIGHT_COORDS and vSpotLightCoord
+      // COMPAT: pre-r166 does not have shadowIntensity, r166+ has shadowIntensity
       #if THREE_VRM_THREE_REVISION >= 166
-        shadow = all( bvec2( directLight.visible, receiveShadow ) ) ? getShadow( spotShadowMap[ i ], spotLightShadow.shadowMapSize, spotLightShadow.shadowIntensity, spotLightShadow.shadowBias, spotLightShadow.shadowRadius, vSpotShadowCoord[ i ] ) : 1.0;
-      #else
-        shadow = all( bvec2( directLight.visible, receiveShadow ) ) ? getShadow( spotShadowMap[ i ], spotLightShadow.shadowMapSize, spotLightShadow.shadowBias, spotLightShadow.shadowRadius, vSpotShadowCoord[ i ] ) : 1.0;
-      #endif
+        #if defined( USE_SHADOWMAP ) && ( UNROLLED_LOOP_INDEX < NUM_SPOT_LIGHT_COORDS )
+        spotLightShadow = spotLightShadows[ i ];
+        shadow = all( bvec2( directLight.visible, receiveShadow ) ) ? getShadow( spotShadowMap[ i ], spotLightShadow.shadowMapSize, spotLightShadow.shadowIntensity, spotLightShadow.shadowBias, spotLightShadow.shadowRadius, vSpotLightCoord[ i ] ) : 1.0;
+        #endif
+      #elif THREE_VRM_THREE_REVISION >= 144
+        #if defined( USE_SHADOWMAP ) && ( UNROLLED_LOOP_INDEX < NUM_SPOT_LIGHT_COORDS )
+        spotLightShadow = spotLightShadows[ i ];
+        shadow = all( bvec2( directLight.visible, receiveShadow ) ) ? getShadow( spotShadowMap[ i ], spotLightShadow.shadowMapSize, spotLightShadow.shadowBias, spotLightShadow.shadowRadius, vSpotLightCoord[ i ] ) : 1.0;
+        #endif
+      #elif defined( USE_SHADOWMAP ) && ( UNROLLED_LOOP_INDEX < NUM_SPOT_LIGHT_SHADOWS )
+      spotLightShadow = spotLightShadows[ i ];
+      shadow = all( bvec2( directLight.visible, receiveShadow ) ) ? getShadow( spotShadowMap[ i ], spotLightShadow.shadowMapSize, spotLightShadow.shadowBias, spotLightShadow.shadowRadius, vSpotShadowCoord[ i ] ) : 1.0;
       #endif
 
       // COMPAT: pre-r156 uses a struct GeometricContext
