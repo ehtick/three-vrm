@@ -120,9 +120,9 @@ export function removeUnnecessaryVertices(root: THREE.Object3D): void {
       const originalAttributeArray = originalAttribute.array;
       const { itemSize, normalized } = originalAttribute;
 
-      const newAttributeArray = new (originalAttributeArray.constructor as any)(
-        newIndexOriginalIndexMap.length * itemSize,
-      );
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      const ArrayCtor = originalAttributeArray.constructor as THREE.TypedArrayConstructor;
+      const newAttributeArray = new ArrayCtor(newIndexOriginalIndexMap.length * itemSize);
 
       newIndexOriginalIndexMap.forEach((originalIndex, i) => {
         for (let j = 0; j < itemSize; j++) {
