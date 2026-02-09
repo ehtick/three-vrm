@@ -106,6 +106,73 @@ function reorganizeIndexAttribute(
 }
 
 /**
+ * Copies typed array data by remapping indices.
+ * @param originalArray Source array
+ * @param newIndexOriginalIndexMap Map from new index to original index
+ * @param stride Number of components per vertex in the array
+ * @returns New array with remapped data
+ */
+function remapAttributeArray(
+  originalArray: THREE.TypedArray,
+  newIndexOriginalIndexMap: number[],
+  stride: number,
+): [THREE.TypedArray, isAllZero: boolean] {
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  const ArrayCtor = originalArray.constructor as THREE.TypedArrayConstructor;
+  const newArray = new ArrayCtor(newIndexOriginalIndexMap.length * stride);
+
+  let isAllZero = true;
+
+  for (let i = 0; i < newIndexOriginalIndexMap.length; i++) {
+    const originalIndex = newIndexOriginalIndexMap[i];
+    const srcBase = originalIndex * stride;
+    const dstBase = i * stride;
+    for (let j = 0; j < stride; j++) {
+      const v = originalArray[srcBase + j];
+      newArray[dstBase + j] = v;
+      isAllZero = isAllZero && v === 0;
+    }
+  }
+
+  return [newArray, isAllZero];
+}
+
+type GeometryInterleavedEntry = [name: string, attribute: THREE.InterleavedBufferAttribute];
+type GeometryNonInterleavedEntry = [name: string, attribute: THREE.BufferAttribute];
+
+/**
+ * Collects geometry attributes.
+ * For interleaved attributes, group them if they share the same InterleavedBuffer.
+ * For non-interleaved attributes, just collect them as is.
+ * @param attributes Original geometry attributes
+ * @returns Collected geometry attribute groups
+ */
+function collectGeometryAttributeGroups(
+  attributes: THREE.BufferGeometry['attributes'],
+): [
+  interleavedBufferAttributeMap: Map<THREE.InterleavedBuffer, GeometryInterleavedEntry[]>,
+  nonInterleavedAttributes: GeometryNonInterleavedEntry[],
+] {
+  const interleavedBufferAttributeMap = new Map<THREE.InterleavedBuffer, GeometryInterleavedEntry[]>();
+  const nonInterleavedAttributes: GeometryNonInterleavedEntry[] = [];
+
+  for (const [attributeName, originalAttribute] of Object.entries(attributes)) {
+    if ((originalAttribute as any).isInterleavedBufferAttribute) {
+      const interleavedAttribute = originalAttribute as THREE.InterleavedBufferAttribute;
+      const interleavedBuffer = interleavedAttribute.data;
+      const group = interleavedBufferAttributeMap.get(interleavedBuffer) ?? [];
+      interleavedBufferAttributeMap.set(interleavedBuffer, group);
+      group.push([attributeName, interleavedAttribute]);
+    } else {
+      const attribute = originalAttribute as THREE.BufferAttribute;
+      nonInterleavedAttributes.push([attributeName, attribute]);
+    }
+  }
+
+  return [interleavedBufferAttributeMap, nonInterleavedAttributes];
+}
+
+/**
  * Rebuilds all geometry attributes based on the new-to-original index map.
  * @param newGeometry New geometry
  * @param attributes Original geometry attributes
@@ -116,28 +183,87 @@ function reorganizeGeometryAttributes(
   attributes: THREE.BufferGeometry['attributes'],
   newIndexOriginalIndexMap: number[],
 ): void {
-  Object.keys(attributes).forEach((attributeName) => {
-    const originalAttribute = attributes[attributeName] as THREE.BufferAttribute;
+  // collect interleaved and non-interleaved attributes
+  const [interleavedBufferAttributeMap, nonInterleavedAttributes] = collectGeometryAttributeGroups(attributes);
 
-    if ((originalAttribute as any).isInterleavedBufferAttribute) {
-      throw new Error('removeUnnecessaryVertices: InterleavedBufferAttribute is not supported');
+  // process interleaved attributes
+  for (const [interleavedBuffer, attributesInGroup] of interleavedBufferAttributeMap) {
+    // rebuild interleaved buffer array
+    const originalInterleavedBufferArray = interleavedBuffer.array;
+    const { stride } = interleavedBuffer;
+    const [newInterleavedArray, _] = remapAttributeArray(
+      originalInterleavedBufferArray,
+      newIndexOriginalIndexMap,
+      stride,
+    );
+
+    // rebuild interleaved buffer
+    const newInterleavedBuffer = new THREE.InterleavedBuffer(newInterleavedArray, stride);
+    newInterleavedBuffer.setUsage(interleavedBuffer.usage);
+
+    // rebuild interleaved buffer attributes
+    for (const [attributeName, originalAttribute] of attributesInGroup) {
+      const { itemSize, offset, normalized } = originalAttribute;
+      const newAttribute = new THREE.InterleavedBufferAttribute(newInterleavedBuffer, itemSize, offset, normalized);
+      newGeometry.setAttribute(attributeName, newAttribute);
     }
+  }
 
+  // process non-interleaved attributes
+  for (const [attributeName, originalAttribute] of nonInterleavedAttributes) {
+    // rebuild attribute array
     const originalAttributeArray = originalAttribute.array;
     const { itemSize, normalized } = originalAttribute;
+    const [newAttributeArray, _] = remapAttributeArray(originalAttributeArray, newIndexOriginalIndexMap, itemSize);
 
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    const ArrayCtor = originalAttributeArray.constructor as THREE.TypedArrayConstructor;
-    const newAttributeArray = new ArrayCtor(newIndexOriginalIndexMap.length * itemSize);
-
-    newIndexOriginalIndexMap.forEach((originalIndex, i) => {
-      for (let j = 0; j < itemSize; j++) {
-        newAttributeArray[i * itemSize + j] = originalAttributeArray[originalIndex * itemSize + j];
-      }
-    });
-
+    // rebuild buffer attribute
     newGeometry.setAttribute(attributeName, new BufferAttribute(newAttributeArray, itemSize, normalized));
-  });
+  }
+}
+
+type MorphAttributeName = keyof THREE.BufferGeometry['morphAttributes'];
+type MorphInterleavedEntry = [
+  name: MorphAttributeName,
+  morphIndex: number,
+  attribute: THREE.InterleavedBufferAttribute,
+];
+type MorphNonInterleavedEntry = [name: MorphAttributeName, morphIndex: number, attribute: THREE.BufferAttribute];
+
+/**
+ * Collects morph attributes.
+ * For interleaved attributes, group them if they share the same InterleavedBuffer.
+ * For non-interleaved attributes, just collect them as is.
+ * @param morphAttributes Original morph attributes
+ * @returns Collected morph attribute groups
+ */
+function collectMorphAttributeGroups(
+  morphAttributes: THREE.BufferGeometry['morphAttributes'],
+): [
+  interleavedBufferAttributeMap: Map<THREE.InterleavedBuffer, MorphInterleavedEntry[]>,
+  nonInterleavedAttributes: MorphNonInterleavedEntry[],
+] {
+  const interleavedBufferAttributeMap = new Map<THREE.InterleavedBuffer, MorphInterleavedEntry[]>();
+  const nonInterleavedAttributes: MorphNonInterleavedEntry[] = [];
+
+  for (const [key, attributes] of Object.entries(morphAttributes)) {
+    const attributeName = key as MorphAttributeName;
+    for (let iMorph = 0; iMorph < attributes.length; iMorph++) {
+      const originalAttribute = attributes[iMorph] as THREE.BufferAttribute | THREE.InterleavedBufferAttribute;
+
+      if ((originalAttribute as any).isInterleavedBufferAttribute) {
+        const interleavedAttribute = originalAttribute as THREE.InterleavedBufferAttribute;
+        const interleavedBuffer = interleavedAttribute.data;
+        const group = interleavedBufferAttributeMap.get(interleavedBuffer) ?? [];
+        interleavedBufferAttributeMap.set(interleavedBuffer, group);
+        group.push([attributeName, iMorph, interleavedAttribute]);
+      } else {
+        const attribute = originalAttribute as THREE.BufferAttribute;
+        nonInterleavedAttributes.push([attributeName, iMorph, attribute]);
+      }
+    }
+  }
+
+  return [interleavedBufferAttributeMap, nonInterleavedAttributes];
 }
 
 /**
@@ -152,39 +278,53 @@ function reorganizeMorphAttributes(
   morphAttributes: THREE.BufferGeometry['morphAttributes'],
   newIndexOriginalIndexMap: number[],
 ): void {
-  const newMorphAttributes: THREE.BufferGeometry['morphAttributes'] = {};
-
   /** True if all morph attribute values are zero */
   let allMorphsAreZero = true;
 
-  for (const [key, attributes] of Object.entries(morphAttributes)) {
-    const attributeName = key as keyof typeof morphAttributes;
-    newMorphAttributes[attributeName] = [];
+  // collect interleaved and non-interleaved morph attributes
+  const [interleavedBufferAttributeMap, nonInterleavedAttributes] = collectMorphAttributeGroups(morphAttributes);
 
-    for (let iMorph = 0; iMorph < attributes.length; iMorph++) {
-      const originalAttribute = attributes[iMorph] as THREE.BufferAttribute;
+  const newMorphAttributes: THREE.BufferGeometry['morphAttributes'] = {};
 
-      if ((originalAttribute as any).isInterleavedBufferAttribute) {
-        throw new Error('removeUnnecessaryVertices: InterleavedBufferAttribute is not supported');
-      }
+  // process interleaved morph attributes
+  for (const [interleavedBuffer, attributesInGroup] of interleavedBufferAttributeMap) {
+    // rebuild interleaved buffer array
+    const originalInterleavedBufferArray = interleavedBuffer.array;
+    const { stride } = interleavedBuffer;
+    const [newInterleavedArray, isAllZero] = remapAttributeArray(
+      originalInterleavedBufferArray,
+      newIndexOriginalIndexMap,
+      stride,
+    );
+    allMorphsAreZero = allMorphsAreZero && isAllZero;
 
-      const originalAttributeArray = originalAttribute.array;
-      const { itemSize, normalized } = originalAttribute;
+    // rebuild interleaved buffer
+    const newInterleavedBuffer = new THREE.InterleavedBuffer(newInterleavedArray, stride);
+    newInterleavedBuffer.setUsage(interleavedBuffer.usage);
 
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      const ArrayCtor = originalAttributeArray.constructor as THREE.TypedArrayConstructor;
-      const newAttributeArray = new ArrayCtor(newIndexOriginalIndexMap.length * itemSize);
-
-      newIndexOriginalIndexMap.forEach((originalIndex, i) => {
-        for (let j = 0; j < itemSize; j++) {
-          const value = originalAttributeArray[originalIndex * itemSize + j];
-          newAttributeArray[i * itemSize + j] = value;
-          allMorphsAreZero = allMorphsAreZero && value === 0;
-        }
-      });
-
-      newMorphAttributes[attributeName][iMorph] = new BufferAttribute(newAttributeArray, itemSize, normalized);
+    // rebuild interleaved buffer attributes
+    for (const [attributeName, morphIndex, attribute] of attributesInGroup) {
+      const { itemSize, offset, normalized } = attribute as THREE.InterleavedBufferAttribute;
+      const newAttribute = new THREE.InterleavedBufferAttribute(newInterleavedBuffer, itemSize, offset, normalized);
+      newMorphAttributes[attributeName] ??= [];
+      newMorphAttributes[attributeName][morphIndex] = newAttribute;
     }
+  }
+
+  // process non-interleaved morph attributes
+  for (const [attributeName, morphIndex, attribute] of nonInterleavedAttributes) {
+    const originalAttribute = attribute as THREE.BufferAttribute;
+    const originalAttributeArray = originalAttribute.array;
+    const { itemSize, normalized } = originalAttribute;
+    const [newAttributeArray, isAllZero] = remapAttributeArray(
+      originalAttributeArray,
+      newIndexOriginalIndexMap,
+      itemSize,
+    );
+    allMorphsAreZero = allMorphsAreZero && isAllZero;
+
+    newMorphAttributes[attributeName] ??= [];
+    newMorphAttributes[attributeName][morphIndex] = new BufferAttribute(newAttributeArray, itemSize, normalized);
   }
 
   // discard morph attributes if all values are zero
