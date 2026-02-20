@@ -16,7 +16,7 @@ function checkIsVertexUsed(
   verticesUsed: number;
 } {
   // determine which vertices are used in the geometry
-  const vertexCount = Object.values(attributes)[0].count;
+  const vertexCount = attributes.position.count;
   const isVertexUsed = new Array(vertexCount) as boolean[];
   let verticesUsed = 0;
 
