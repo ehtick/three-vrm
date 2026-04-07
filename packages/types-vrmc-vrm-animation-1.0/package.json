@@ -16,7 +16,7 @@
     "directory": "packages/types-vrmc-vrm-animation-1.0"
   },
   "scripts": {
-    "version": "yarn clean",
+    "version": "pnpm clean",
     "clean": "rimraf docs/",
     "docs-legacy": "typedoc --plugin ../../typedoc-redirect-legacy-docs-plugin.mjs",
     "lint": "eslint \"types/**/*.{ts,tsx}\" && prettier \"types/**/*.{ts,tsx}\" --check",
