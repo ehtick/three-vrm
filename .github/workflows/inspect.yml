@@ -110,7 +110,7 @@ jobs:
         name: build
         path: packages
     - name: Build Docs
-      run: pnpm docs
+      run: pnpm run docs
     - name: Upload Docs
       uses: actions/upload-artifact@v4
       with:
@@ -142,7 +142,7 @@ jobs:
         name: build
         path: packages
     - name: Build Docs
-      run: DOCS_ROOT='https://pixiv.github.io/three-vrm/docs' pnpm docs-legacy
+      run: DOCS_ROOT='https://pixiv.github.io/three-vrm/docs' pnpm run docs-legacy
     - name: Upload Docs
       uses: actions/upload-artifact@v4
       with:

@@ -5,7 +5,7 @@
     "provenance": true
   },
   "scripts": {
-    "all": "pnpm clean && pnpm build && pnpm test && pnpm lint && pnpm docs && pnpm docs-legacy",
+    "all": "pnpm clean && pnpm build && pnpm test && pnpm lint && pnpm run docs && pnpm run docs-legacy",
     "clean": "rimraf docs/ && lerna run clean",
     "dev": "cross-env NODE_ENV=development SERVE=1 node ./bin/build.mjs",
     "build": "lerna run build",
