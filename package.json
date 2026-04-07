@@ -14,8 +14,7 @@
     "lint-fix": "lerna run lint-fix",
     "docs": "typedoc",
     "docs-legacy": "lerna run docs-legacy",
-    "prepare": "husky",
-    "postinstall": "patch-package"
+    "prepare": "husky"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.3",
@@ -32,7 +31,6 @@
     "husky": "^9.1.5",
     "lerna": "^9.0.3",
     "lint-staged": "^16.2.7",
-    "patch-package": "^8.0.0",
     "prettier": "^3.3.3",
     "rimraf": "^6.0.1",
     "ts-node": "^10.9.2",
