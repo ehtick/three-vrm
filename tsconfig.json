@@ -2,17 +2,15 @@
   "compilerOptions": {
     "target": "es6",
     "module": "es6",
-    "lib": ["es2018", "dom"],
+    "lib": ["es2019", "dom"],
     "moduleResolution": "Bundler",
     "resolveJsonModule": true,
+    "skipLibCheck": true,
     "strict": true,
-    "baseUrl": ".",
     "forceConsistentCasingInFileNames": true,
     "paths": {
-      "@pixiv/three-vrm": ["packages/three-vrm"],
-      "@pixiv/three-vrm-constraints": ["packages/three-vrm-constraints"],
-      "@pixiv/types-vrm-constraints-1.0": ["packages/types-vrm-constraints-1.0"],
-      "three/addons/*": ["node_modules/@types/three/examples/jsm/*"]
+      "@pixiv/three-vrm": ["./packages/three-vrm"],
+      "three/addons/*": ["./node_modules/@types/three/examples/jsm/*"]
     }
   }
 }
