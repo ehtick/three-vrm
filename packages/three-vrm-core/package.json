@@ -49,8 +49,8 @@
     ]
   },
   "dependencies": {
-    "@pixiv/types-vrm-0.0": "3.5.1",
-    "@pixiv/types-vrmc-vrm-1.0": "3.5.1"
+    "@pixiv/types-vrm-0.0": "workspace:*",
+    "@pixiv/types-vrmc-vrm-1.0": "workspace:*"
   },
   "devDependencies": {
     "@types/three": "^0.180.0",

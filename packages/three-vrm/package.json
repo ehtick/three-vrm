@@ -54,12 +54,12 @@
     ]
   },
   "dependencies": {
-    "@pixiv/three-vrm-core": "3.5.1",
-    "@pixiv/three-vrm-materials-hdr-emissive-multiplier": "3.5.1",
-    "@pixiv/three-vrm-materials-mtoon": "3.5.1",
-    "@pixiv/three-vrm-materials-v0compat": "3.5.1",
-    "@pixiv/three-vrm-node-constraint": "3.5.1",
-    "@pixiv/three-vrm-springbone": "3.5.1"
+    "@pixiv/three-vrm-core": "workspace:*",
+    "@pixiv/three-vrm-materials-hdr-emissive-multiplier": "workspace:*",
+    "@pixiv/three-vrm-materials-mtoon": "workspace:*",
+    "@pixiv/three-vrm-materials-v0compat": "workspace:*",
+    "@pixiv/three-vrm-node-constraint": "workspace:*",
+    "@pixiv/three-vrm-springbone": "workspace:*"
   },
   "devDependencies": {
     "@types/three": "^0.180.0",

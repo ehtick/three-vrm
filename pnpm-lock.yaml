@@ -80,23 +80,23 @@ importers:
   packages/three-vrm:
     dependencies:
       '@pixiv/three-vrm-core':
-        specifier: 3.5.1
-        version: 3.5.1(three@0.180.0)
+        specifier: workspace:*
+        version: link:../three-vrm-core
       '@pixiv/three-vrm-materials-hdr-emissive-multiplier':
-        specifier: 3.5.1
-        version: 3.5.1(three@0.180.0)
+        specifier: workspace:*
+        version: link:../three-vrm-materials-hdr-emissive-multiplier
       '@pixiv/three-vrm-materials-mtoon':
-        specifier: 3.5.1
-        version: 3.5.1(three@0.180.0)
+        specifier: workspace:*
+        version: link:../three-vrm-materials-mtoon
       '@pixiv/three-vrm-materials-v0compat':
-        specifier: 3.5.1
-        version: 3.5.1(three@0.180.0)
+        specifier: workspace:*
+        version: link:../three-vrm-materials-v0compat
       '@pixiv/three-vrm-node-constraint':
-        specifier: 3.5.1
-        version: 3.5.1(three@0.180.0)
+        specifier: workspace:*
+        version: link:../three-vrm-node-constraint
       '@pixiv/three-vrm-springbone':
-        specifier: 3.5.1
-        version: 3.5.1(three@0.180.0)
+        specifier: workspace:*
+        version: link:../three-vrm-springbone
     devDependencies:
       '@types/three':
         specifier: ^0.180.0
@@ -108,14 +108,14 @@ importers:
   packages/three-vrm-animation:
     dependencies:
       '@pixiv/three-vrm-core':
-        specifier: 3.5.1
-        version: 3.5.1(three@0.180.0)
+        specifier: workspace:*
+        version: link:../three-vrm-core
       '@pixiv/types-vrmc-vrm-1.0':
-        specifier: 3.5.1
-        version: 3.5.1
+        specifier: workspace:*
+        version: link:../types-vrmc-vrm-1.0
       '@pixiv/types-vrmc-vrm-animation-1.0':
-        specifier: 3.5.1
-        version: 3.5.1
+        specifier: workspace:*
+        version: link:../types-vrmc-vrm-animation-1.0
     devDependencies:
       '@types/three':
         specifier: ^0.180.0
@@ -127,11 +127,11 @@ importers:
   packages/three-vrm-core:
     dependencies:
       '@pixiv/types-vrm-0.0':
-        specifier: 3.5.1
-        version: 3.5.1
+        specifier: workspace:*
+        version: link:../types-vrm-0.0
       '@pixiv/types-vrmc-vrm-1.0':
-        specifier: 3.5.1
-        version: 3.5.1
+        specifier: workspace:*
+        version: link:../types-vrmc-vrm-1.0
     devDependencies:
       '@types/three':
         specifier: ^0.180.0
@@ -143,8 +143,8 @@ importers:
   packages/three-vrm-materials-hdr-emissive-multiplier:
     dependencies:
       '@pixiv/types-vrmc-materials-hdr-emissive-multiplier-1.0':
-        specifier: 3.5.1
-        version: 3.5.1
+        specifier: workspace:*
+        version: link:../types-vrmc-materials-hdr-emissive-multiplier-1.0
     devDependencies:
       '@types/three':
         specifier: ^0.180.0
@@ -156,11 +156,11 @@ importers:
   packages/three-vrm-materials-mtoon:
     dependencies:
       '@pixiv/types-vrm-0.0':
-        specifier: 3.5.1
-        version: 3.5.1
+        specifier: workspace:*
+        version: link:../types-vrm-0.0
       '@pixiv/types-vrmc-materials-mtoon-1.0':
-        specifier: 3.5.1
-        version: 3.5.1
+        specifier: workspace:*
+        version: link:../types-vrmc-materials-mtoon-1.0
     devDependencies:
       '@types/three':
         specifier: ^0.180.0
@@ -172,11 +172,11 @@ importers:
   packages/three-vrm-materials-v0compat:
     dependencies:
       '@pixiv/types-vrm-0.0':
-        specifier: 3.5.1
-        version: 3.5.1
+        specifier: workspace:*
+        version: link:../types-vrm-0.0
       '@pixiv/types-vrmc-materials-mtoon-1.0':
-        specifier: 3.5.1
-        version: 3.5.1
+        specifier: workspace:*
+        version: link:../types-vrmc-materials-mtoon-1.0
     devDependencies:
       '@types/three':
         specifier: ^0.180.0
@@ -188,8 +188,8 @@ importers:
   packages/three-vrm-node-constraint:
     dependencies:
       '@pixiv/types-vrmc-node-constraint-1.0':
-        specifier: 3.5.1
-        version: 3.5.1
+        specifier: workspace:*
+        version: link:../types-vrmc-node-constraint-1.0
     devDependencies:
       '@types/three':
         specifier: ^0.180.0
@@ -201,14 +201,14 @@ importers:
   packages/three-vrm-springbone:
     dependencies:
       '@pixiv/types-vrm-0.0':
-        specifier: 3.5.1
-        version: 3.5.1
+        specifier: workspace:*
+        version: link:../types-vrm-0.0
       '@pixiv/types-vrmc-springbone-1.0':
-        specifier: 3.5.1
-        version: 3.5.1
+        specifier: workspace:*
+        version: link:../types-vrmc-springbone-1.0
       '@pixiv/types-vrmc-springbone-extended-collider-1.0':
-        specifier: 3.5.1
-        version: 3.5.1
+        specifier: workspace:*
+        version: link:../types-vrmc-springbone-extended-collider-1.0
     devDependencies:
       '@types/three':
         specifier: ^0.180.0
@@ -234,8 +234,8 @@ importers:
   packages/types-vrmc-vrm-animation-1.0:
     dependencies:
       '@pixiv/types-vrmc-vrm-1.0':
-        specifier: 3.5.1
-        version: 3.5.1
+        specifier: workspace:*
+        version: link:../types-vrmc-vrm-1.0
 
 packages:
 
@@ -1043,63 +1043,6 @@ packages:
 
   '@octokit/types@13.10.0':
     resolution: {integrity: sha512-ifLaO34EbbPj0Xgro4G5lP5asESjwHracYJvVaPIyXMuiuXLlhic3S47cBdTb+jfODkTE5YtGCLt3Ay3+J97sA==}
-
-  '@pixiv/three-vrm-core@3.5.1':
-    resolution: {integrity: sha512-uKT9wBXHzE6U3sABdKwNnLOj28akQPGF8+P1EGdEb/j3Fcmn2qmFwUq7rbKwKJP8WGAHp++N1LJn3r+xVjyLBA==}
-    peerDependencies:
-      three: '>=0.137'
-
-  '@pixiv/three-vrm-materials-hdr-emissive-multiplier@3.5.1':
-    resolution: {integrity: sha512-BlKRo9Oa8fdVakXGptjTfBG+JpTlDWKEipBF+yQ2v9Vo13rIJXcNCv3HgpbxFDJh+BssKC5WH0Tuw0BE2UPLwg==}
-    peerDependencies:
-      three: '>=0.137'
-
-  '@pixiv/three-vrm-materials-mtoon@3.5.1':
-    resolution: {integrity: sha512-6zrSDsdiQRtzU0/ZUbRuLnjaqfhFmivQ2OBwpJgtjXuHjCZVcsR8GmiDk+0/6OFlaWymux/CpPidLKN9DWr0Mw==}
-    peerDependencies:
-      three: '>=0.137'
-
-  '@pixiv/three-vrm-materials-v0compat@3.5.1':
-    resolution: {integrity: sha512-pVzEQDDaKIwJ0DBtHl+Q9wr2FtkxauEkmsw9jt1ZoSk7QxI1vkhCAbWUXAS6XT5ttZ4izbhfNd9Brn4f5Kigxg==}
-    peerDependencies:
-      three: '>=0.137'
-
-  '@pixiv/three-vrm-node-constraint@3.5.1':
-    resolution: {integrity: sha512-Bywh9IpfEUbQxFijiksNZUOaAodLhgvlD5nZjsNwx6uOxYPfSYYJkxjLA3+wxwt6rT7bS41FEUBMBYAmdsXHkg==}
-    peerDependencies:
-      three: '>=0.137'
-
-  '@pixiv/three-vrm-springbone@3.5.1':
-    resolution: {integrity: sha512-ylsukk+2o9t06vMEiOqE1443FDQYpozbov375SE8phgCDqfmPe9YEEvAX3md0cCCqOfqMWuXdxzU8avWXXynTw==}
-    peerDependencies:
-      three: '>=0.137'
-
-  '@pixiv/types-vrm-0.0@3.5.1':
-    resolution: {integrity: sha512-97XgNpLw0v6YPVqzTALIjPftyOZnkK8Rd4QWwlI5RVo96DASSTrPpdMw1HAwwcDEGHj35ru9Cxar97eUltkJug==}
-
-  '@pixiv/types-vrmc-materials-hdr-emissive-multiplier-1.0@3.5.1':
-    resolution: {integrity: sha512-/kZpjn3yDIH5+BlZz6VkCd7694Pz9kFTc/ImfTKQ/MNfXtmLU7zlhVZ55U/E/9kkSyzJ6ocmLgO9FnMRqZ2YBQ==}
-
-  '@pixiv/types-vrmc-materials-mtoon-1.0@3.5.1':
-    resolution: {integrity: sha512-8IfN65S4qB+8vNMcsJHcjUAlSalR+T+QY5QZY3JU33/AnLQLJtnMzaRIAbwZyhrzOiIfK0b8eJnjHBYxV2Bteg==}
-
-  '@pixiv/types-vrmc-node-constraint-1.0@3.5.1':
-    resolution: {integrity: sha512-oeYhK42AhWCkJGiheY0vGHQkU7ayetI8fk93cU4vOAJUSW5Ric+36KtWAVOgp8Ja5o/RS2cu40Biuma6DZ0H7g==}
-
-  '@pixiv/types-vrmc-springbone-1.0@3.5.1':
-    resolution: {integrity: sha512-3563cYQ5tjdc0g8tj+hP206z/nKR3uGhoFh2t/r6yCOI6q3SPgSIEkHG8mZu1boegRfPj4fPbXbntQFeqJxECw==}
-
-  '@pixiv/types-vrmc-springbone-extended-collider-1.0@3.5.1':
-    resolution: {integrity: sha512-Q975/y/3zEKPggYC3E/6uG/RVTt+2k1GpRfR6ngJ9NHM5rzlSab4yDCSx3qePjHpHIJvS9847LK9HPUrG7f3Og==}
-
-  '@pixiv/types-vrmc-vrm-1.0@2.0.3':
-    resolution: {integrity: sha512-RMP34Bk1qLFQv/CRB1Zqvn2qMFfWQfP2Hms5QrrfoBsW9XroZdEe0zPLNbGmUPYh4F7VtBb+B7+RCuymRtpehA==}
-
-  '@pixiv/types-vrmc-vrm-1.0@3.5.1':
-    resolution: {integrity: sha512-Ugf8Kv5SSORVf8i+P4i5O2iuMuyzKW6ZRvntWuGXFN6YO7Zx38Vn8zbGKtWTs+zR9dfHWdZixjWcW71Vy4NyVw==}
-
-  '@pixiv/types-vrmc-vrm-animation-1.0@3.5.1':
-    resolution: {integrity: sha512-q5UqefIbJmxQg5fVDSQGe2p/zsD7OmhBLSxPseXohj17O7Ew/5gVKyDCFjh7XpGZtpX6Ydmpd2svSI9QACfyaw==}
 
   '@rollup/rollup-android-arm-eabi@4.60.1':
     resolution: {integrity: sha512-d6FinEBLdIiK+1uACUttJKfgZREXrF0Qc2SmLII7W2AD8FfiZ9Wjd+rD/iRuf5s5dWrr1GgwXCvPqOuDquOowA==}
@@ -4427,61 +4370,6 @@ snapshots:
   '@octokit/types@13.10.0':
     dependencies:
       '@octokit/openapi-types': 24.2.0
-
-  '@pixiv/three-vrm-core@3.5.1(three@0.180.0)':
-    dependencies:
-      '@pixiv/types-vrm-0.0': 3.5.1
-      '@pixiv/types-vrmc-vrm-1.0': 3.5.1
-      three: 0.180.0
-
-  '@pixiv/three-vrm-materials-hdr-emissive-multiplier@3.5.1(three@0.180.0)':
-    dependencies:
-      '@pixiv/types-vrmc-materials-hdr-emissive-multiplier-1.0': 3.5.1
-      three: 0.180.0
-
-  '@pixiv/three-vrm-materials-mtoon@3.5.1(three@0.180.0)':
-    dependencies:
-      '@pixiv/types-vrm-0.0': 3.5.1
-      '@pixiv/types-vrmc-materials-mtoon-1.0': 3.5.1
-      three: 0.180.0
-
-  '@pixiv/three-vrm-materials-v0compat@3.5.1(three@0.180.0)':
-    dependencies:
-      '@pixiv/types-vrm-0.0': 3.5.1
-      '@pixiv/types-vrmc-materials-mtoon-1.0': 3.5.1
-      three: 0.180.0
-
-  '@pixiv/three-vrm-node-constraint@3.5.1(three@0.180.0)':
-    dependencies:
-      '@pixiv/types-vrmc-node-constraint-1.0': 3.5.1
-      three: 0.180.0
-
-  '@pixiv/three-vrm-springbone@3.5.1(three@0.180.0)':
-    dependencies:
-      '@pixiv/types-vrm-0.0': 3.5.1
-      '@pixiv/types-vrmc-springbone-1.0': 3.5.1
-      '@pixiv/types-vrmc-springbone-extended-collider-1.0': 3.5.1
-      three: 0.180.0
-
-  '@pixiv/types-vrm-0.0@3.5.1': {}
-
-  '@pixiv/types-vrmc-materials-hdr-emissive-multiplier-1.0@3.5.1': {}
-
-  '@pixiv/types-vrmc-materials-mtoon-1.0@3.5.1': {}
-
-  '@pixiv/types-vrmc-node-constraint-1.0@3.5.1': {}
-
-  '@pixiv/types-vrmc-springbone-1.0@3.5.1': {}
-
-  '@pixiv/types-vrmc-springbone-extended-collider-1.0@3.5.1': {}
-
-  '@pixiv/types-vrmc-vrm-1.0@2.0.3': {}
-
-  '@pixiv/types-vrmc-vrm-1.0@3.5.1': {}
-
-  '@pixiv/types-vrmc-vrm-animation-1.0@3.5.1':
-    dependencies:
-      '@pixiv/types-vrmc-vrm-1.0': 2.0.3
 
   '@rollup/rollup-android-arm-eabi@4.60.1':
     optional: true
