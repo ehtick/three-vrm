@@ -1,14 +1,11 @@
 {
   "private": true,
   "type": "module",
-  "workspaces": [
-    "packages/*"
-  ],
   "publishConfig": {
     "provenance": true
   },
   "scripts": {
-    "all": "yarn clean && yarn build && yarn test && yarn lint && yarn docs && yarn docs-legacy",
+    "all": "pnpm clean && pnpm build && pnpm test && pnpm lint && pnpm run docs && pnpm run docs-legacy",
     "clean": "rimraf docs/ && lerna run clean",
     "dev": "cross-env NODE_ENV=development SERVE=1 node ./bin/build.mjs",
     "build": "lerna run build",
@@ -17,8 +14,7 @@
     "lint-fix": "lerna run lint-fix",
     "docs": "typedoc",
     "docs-legacy": "lerna run docs-legacy",
-    "prepare": "husky",
-    "postinstall": "patch-package"
+    "prepare": "husky"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.3",
@@ -35,7 +31,6 @@
     "husky": "^9.1.5",
     "lerna": "^9.0.3",
     "lint-staged": "^16.2.7",
-    "patch-package": "^8.0.0",
     "prettier": "^3.3.3",
     "rimraf": "^6.0.1",
     "ts-node": "^10.9.2",

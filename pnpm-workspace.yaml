@@ -1,0 +1,7 @@
+packages:
+  - packages/*
+
+minimumReleaseAge: 10080
+
+patchedDependencies:
+  '@types/three@0.180.0': patches/@types__three@0.180.0.patch

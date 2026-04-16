@@ -12,23 +12,20 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v4
+    - name: Setup pnpm
+      uses: pnpm/action-setup@v5
+      with:
+        version: 10.33.0
+        run_install: false
     - name: Setup Node
       uses: actions/setup-node@v4
       with:
         node-version-file: './.node-version'
-    - name: Cache Deps
-      uses: actions/cache@v4
-      with:
-        path: |
-          node_modules
-          packages/*/node_modules
-        key: ${{ runner.os }}-yarn-${{ hashFiles( 'yarn.lock' ) }}
-        restore-keys: |
-          ${{ runner.os }}-yarn-
+        cache: 'pnpm'
     - name: Fetch Deps
-      run: yarn install --frozen-lockfile
+      run: pnpm install --frozen-lockfile
     - name: Build
-      run: yarn build
+      run: pnpm build
     - name: Upload Builds
       uses: actions/upload-artifact@v4
       with:
@@ -43,28 +40,25 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v4
+    - name: Setup pnpm
+      uses: pnpm/action-setup@v5
+      with:
+        version: 10.33.0
+        run_install: false
     - name: Setup Node
       uses: actions/setup-node@v4
       with:
         node-version-file: './.node-version'
-    - name: Cache Deps
-      uses: actions/cache@v4
-      with:
-        path: |
-          node_modules
-          packages/*/node_modules
-        key: ${{ runner.os }}-yarn-${{ hashFiles( 'yarn.lock' ) }}
-        restore-keys: |
-          ${{ runner.os }}-yarn-
+        cache: 'pnpm'
     - name: Fetch Deps
-      run: yarn install --frozen-lockfile
+      run: pnpm install --frozen-lockfile
     - name: Download Builds
       uses: actions/download-artifact@v4
       with:
         name: build
         path: packages
     - name: Lint
-      run: yarn lint
+      run: pnpm lint
 
   test:
     runs-on: ubuntu-latest
@@ -72,28 +66,25 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v4
+    - name: Setup pnpm
+      uses: pnpm/action-setup@v5
+      with:
+        version: 10.33.0
+        run_install: false
     - name: Setup Node
       uses: actions/setup-node@v4
       with:
         node-version-file: './.node-version'
-    - name: Cache Deps
-      uses: actions/cache@v4
-      with:
-        path: |
-          node_modules
-          packages/*/node_modules
-        key: ${{ runner.os }}-yarn-${{ hashFiles( 'yarn.lock' ) }}
-        restore-keys: |
-          ${{ runner.os }}-yarn-
+        cache: 'pnpm'
     - name: Fetch Deps
-      run: yarn install --frozen-lockfile
+      run: pnpm install --frozen-lockfile
     - name: Download Builds
       uses: actions/download-artifact@v4
       with:
         name: build
         path: packages
     - name: Test
-      run: yarn test
+      run: pnpm test
 
   docs:
     runs-on: ubuntu-latest
@@ -101,28 +92,25 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v4
+    - name: Setup pnpm
+      uses: pnpm/action-setup@v5
+      with:
+        version: 10.33.0
+        run_install: false
     - name: Setup Node
       uses: actions/setup-node@v4
       with:
         node-version-file: './.node-version'
-    - name: Cache Deps
-      uses: actions/cache@v4
-      with:
-        path: |
-          node_modules
-          packages/*/node_modules
-        key: ${{ runner.os }}-yarn-${{ hashFiles( 'yarn.lock' ) }}
-        restore-keys: |
-          ${{ runner.os }}-yarn-
+        cache: 'pnpm'
     - name: Fetch Deps
-      run: yarn install --frozen-lockfile
+      run: pnpm install --frozen-lockfile
     - name: Download Builds
       uses: actions/download-artifact@v4
       with:
         name: build
         path: packages
     - name: Build Docs
-      run: yarn docs
+      run: pnpm run docs
     - name: Upload Docs
       uses: actions/upload-artifact@v4
       with:
@@ -136,28 +124,25 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v4
+    - name: Setup pnpm
+      uses: pnpm/action-setup@v5
+      with:
+        version: 10.33.0
+        run_install: false
     - name: Setup Node
       uses: actions/setup-node@v4
       with:
         node-version-file: './.node-version'
-    - name: Cache Deps
-      uses: actions/cache@v4
-      with:
-        path: |
-          node_modules
-          packages/*/node_modules
-        key: ${{ runner.os }}-yarn-${{ hashFiles( 'yarn.lock' ) }}
-        restore-keys: |
-          ${{ runner.os }}-yarn-
+        cache: 'pnpm'
     - name: Fetch Deps
-      run: yarn install --frozen-lockfile
+      run: pnpm install --frozen-lockfile
     - name: Download Builds
       uses: actions/download-artifact@v4
       with:
         name: build
         path: packages
     - name: Build Docs
-      run: DOCS_ROOT='https://pixiv.github.io/three-vrm/docs' yarn docs-legacy
+      run: DOCS_ROOT='https://pixiv.github.io/three-vrm/docs' pnpm run docs-legacy
     - name: Upload Docs
       uses: actions/upload-artifact@v4
       with:
@@ -175,21 +160,18 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v4
+    - name: Setup pnpm
+      uses: pnpm/action-setup@v5
+      with:
+        version: 10.33.0
+        run_install: false
     - name: Setup Node
       uses: actions/setup-node@v4
       with:
         node-version-file: './.node-version'
-    - name: Cache Deps
-      uses: actions/cache@v4
-      with:
-        path: |
-          node_modules
-          packages/*/node_modules
-        key: ${{ runner.os }}-yarn-${{ hashFiles( 'yarn.lock' ) }}
-        restore-keys: |
-          ${{ runner.os }}-yarn-
+        cache: 'pnpm'
     - name: Fetch Deps
-      run: yarn install --frozen-lockfile
+      run: pnpm install --frozen-lockfile
     - name: Download Builds
       uses: actions/download-artifact@v4
       with:
