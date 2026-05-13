@@ -185,18 +185,20 @@ export class VRMSpringBoneLoaderPlugin implements GLTFLoaderPlugin {
 
     const colliderGroups = extension.colliderGroups?.map(
       (schemaColliderGroup, iColliderGroup): VRMSpringBoneColliderGroup => {
-        const cols = (schemaColliderGroup.colliders ?? []).flatMap((iCollider) => {
-          const col = colliders?.[iCollider];
+        const cols = (schemaColliderGroup.colliders ?? [])
+          .map((iCollider) => {
+            const col = colliders?.[iCollider];
 
-          if (col == null) {
-            console.warn(
-              `VRMSpringBoneLoaderPlugin: The collider group #${iColliderGroup} attempted to reference a collider #${iCollider} but not found. Skipping the collider`,
-            );
-            return [];
-          }
+            if (col == null) {
+              console.warn(
+                `VRMSpringBoneLoaderPlugin: The collider group #${iColliderGroup} attempted to reference a collider #${iCollider} but not found. Skipping the collider`,
+              );
+              return [];
+            }
 
-          return col;
-        });
+            return col;
+          })
+          .filter((col): col is VRMSpringBoneCollider => col != null);
 
         return {
           colliders: cols,
