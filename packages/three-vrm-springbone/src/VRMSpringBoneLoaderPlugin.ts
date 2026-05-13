@@ -291,6 +291,12 @@ export class VRMSpringBoneLoaderPlugin implements GLTFLoaderPlugin {
     const colliderGroups = schemaSecondaryAnimation.colliderGroups?.map(
       (schemaColliderGroup): VRMSpringBoneColliderGroup => {
         const node = threeNodes[schemaColliderGroup.node!];
+        if (node == null) {
+          throw new Error(
+            `VRMSpringBoneLoaderPlugin: Attempted to reference the node #${schemaColliderGroup.node} but not found`,
+          );
+        }
+
         const colliders = (schemaColliderGroup.colliders ?? []).map((schemaCollider, iCollider) => {
           const offset = new THREE.Vector3(0.0, 0.0, 0.0);
           if (schemaCollider.offset) {
@@ -321,6 +327,9 @@ export class VRMSpringBoneLoaderPlugin implements GLTFLoaderPlugin {
 
       rootIndices.forEach((rootIndex) => {
         const root = threeNodes[rootIndex];
+        if (root == null) {
+          throw new Error(`VRMSpringBoneLoaderPlugin: Attempted to reference the node #${rootIndex} but not found`);
+        }
 
         // prepare setting
         const gravityDir = new THREE.Vector3();
