@@ -123,7 +123,7 @@ export class VRMSpringBoneLoaderPlugin implements GLTFLoaderPlugin {
       // Some models put `-1` to the node index of colliders
       if (node == null) {
         console.warn(
-          `VRMSpringBoneLoaderPlugin: The collider #${iCollider} attempted to use the node #${schemaCollider.node} but not found`,
+          `VRMSpringBoneLoaderPlugin: The collider #${iCollider} attempted to reference a node #${schemaCollider.node} but not found. Skipping the collider`,
         );
         return null;
       }
@@ -180,7 +180,7 @@ export class VRMSpringBoneLoaderPlugin implements GLTFLoaderPlugin {
         });
       }
 
-      throw new Error(`VRMSpringBoneLoaderPlugin: The collider #${iCollider} has no valid shape`);
+      console.warn(`VRMSpringBoneLoaderPlugin: The collider #${iCollider} has no valid shape. Skipping the collider`);
     });
 
     const colliderGroups = extension.colliderGroups?.map(
@@ -190,7 +190,7 @@ export class VRMSpringBoneLoaderPlugin implements GLTFLoaderPlugin {
 
           if (col == null) {
             console.warn(
-              `VRMSpringBoneLoaderPlugin: The colliderGroup #${iColliderGroup} attempted to use a collider #${iCollider} but not found`,
+              `VRMSpringBoneLoaderPlugin: The collider group #${iColliderGroup} attempted to reference a collider #${iCollider} but not found. Skipping the collider`,
             );
             return [];
           }
@@ -209,17 +209,20 @@ export class VRMSpringBoneLoaderPlugin implements GLTFLoaderPlugin {
       const schemaJoints = schemaSpring.joints;
 
       // prepare colliders
-      const colliderGroupsForSpring = schemaSpring.colliderGroups?.map((iColliderGroup) => {
-        const group = colliderGroups?.[iColliderGroup];
+      const colliderGroupsForSpring = schemaSpring.colliderGroups
+        ?.map((iColliderGroup) => {
+          const group = colliderGroups?.[iColliderGroup];
 
-        if (group == null) {
-          throw new Error(
-            `VRMSpringBoneLoaderPlugin: The spring #${iSpring} attempted to use a colliderGroup ${iColliderGroup} but not found`,
-          );
-        }
+          if (group == null) {
+            console.warn(
+              `VRMSpringBoneLoaderPlugin: The spring #${iSpring} attempted to reference a collider group #${iColliderGroup} but not found. Skipping the collider group`,
+            );
+            return null;
+          }
 
-        return group;
-      });
+          return group;
+        })
+        .filter((group): group is VRMSpringBoneColliderGroup => group != null);
 
       const center = schemaSpring.center != null ? threeNodes[schemaSpring.center] : undefined;
 
@@ -289,12 +292,13 @@ export class VRMSpringBoneLoaderPlugin implements GLTFLoaderPlugin {
     const threeNodes: THREE.Object3D[] = await gltf.parser.getDependencies('node');
 
     const colliderGroups = schemaSecondaryAnimation.colliderGroups?.map(
-      (schemaColliderGroup): VRMSpringBoneColliderGroup => {
+      (schemaColliderGroup, iColliderGroup): VRMSpringBoneColliderGroup | null => {
         const node = threeNodes[schemaColliderGroup.node!];
         if (node == null) {
-          throw new Error(
-            `VRMSpringBoneLoaderPlugin: Attempted to reference the node #${schemaColliderGroup.node} but not found`,
+          console.warn(
+            `VRMSpringBoneLoaderPlugin: The collider group #${iColliderGroup} attempted to reference a node #${schemaColliderGroup.node} but not found. Skipping the collider group`,
           );
+          return null;
         }
 
         const colliders = (schemaColliderGroup.colliders ?? []).map((schemaCollider, iCollider) => {
@@ -328,7 +332,10 @@ export class VRMSpringBoneLoaderPlugin implements GLTFLoaderPlugin {
       rootIndices.forEach((rootIndex) => {
         const root = threeNodes[rootIndex];
         if (root == null) {
-          throw new Error(`VRMSpringBoneLoaderPlugin: Attempted to reference the node #${rootIndex} but not found`);
+          console.warn(
+            `VRMSpringBoneLoaderPlugin: The spring bone group #${iBoneGroup} attempted to reference a node #${rootIndex} but not found. Skipping the node`,
+          );
+          return;
         }
 
         // prepare setting
@@ -354,17 +361,20 @@ export class VRMSpringBoneLoaderPlugin implements GLTFLoaderPlugin {
         };
 
         // prepare colliders
-        const colliderGroupsForSpring = schemaBoneGroup.colliderGroups?.map((iColliderGroup) => {
-          const group = colliderGroups?.[iColliderGroup];
+        const colliderGroupsForSpring = schemaBoneGroup.colliderGroups
+          ?.map((iColliderGroup) => {
+            const group = colliderGroups?.[iColliderGroup];
 
-          if (group == null) {
-            throw new Error(
-              `VRMSpringBoneLoaderPlugin: The spring #${iBoneGroup} attempted to use a colliderGroup ${iColliderGroup} but not found`,
-            );
-          }
+            if (group == null) {
+              console.warn(
+                `VRMSpringBoneLoaderPlugin: The spring #${iBoneGroup} attempted to reference a collider group #${iColliderGroup} but not found. Skipping the collider group`,
+              );
+              return null;
+            }
 
-          return group;
-        });
+            return group;
+          })
+          .filter((group): group is VRMSpringBoneColliderGroup => group != null);
 
         // create spring bones
         root.traverse((node) => {
