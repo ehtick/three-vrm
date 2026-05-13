@@ -46,15 +46,23 @@ export class GLTFMToonMaterialParamsAssignHelper {
 
   public async assignTexture<T extends keyof MToonMaterialParameters>(
     key: T,
-    texture: { index: number } | undefined,
+    schemaTexture: { index: number } | undefined,
     isColorTexture: boolean,
   ): Promise<void> {
     const promise = (async () => {
-      if (texture != null) {
-        await this._parser.assignTexture(this._materialParams, key, texture);
+      if (schemaTexture != null) {
+        const texture = await this._parser.assignTexture(this._materialParams, key, schemaTexture);
+
+        // early abort if texture failed to load
+        if (texture == null) {
+          console.warn(
+            'GLTFMToonMaterialParamsAssignHelper: Failed to load texture. The rendering result may be wrong',
+          );
+          return;
+        }
 
         if (isColorTexture) {
-          setTextureColorSpace(this._materialParams[key] as THREE.Texture, 'srgb');
+          setTextureColorSpace(texture, 'srgb');
         }
       }
     })();
