@@ -193,7 +193,7 @@ export class VRMSpringBoneLoaderPlugin implements GLTFLoaderPlugin {
               console.warn(
                 `VRMSpringBoneLoaderPlugin: The collider group #${iColliderGroup} attempted to reference a collider #${iCollider} but not found. Skipping the collider`,
               );
-              return [];
+              return null;
             }
 
             return col;
