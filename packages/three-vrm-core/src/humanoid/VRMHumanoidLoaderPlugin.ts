@@ -175,6 +175,15 @@ export class VRMHumanoidLoaderPlugin implements GLTFLoaderPlugin {
             return;
           }
 
+          // VRM0.0 can contain -1 as a node index, which is invalid
+          // Found at least in UniVRM-0.61.1
+          if (index < 0) {
+            console.warn(
+              `A glTF node index for the humanoid bone ${boneName} is negative (${index}), ignoring this bone.`,
+            );
+            return;
+          }
+
           const node = await this.parser.getDependency('node', index);
 
           // if the specified node does not exist, emit a warning
