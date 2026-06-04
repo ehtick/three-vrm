@@ -301,6 +301,13 @@ export class VRMExpressionLoaderPlugin implements GLTFLoaderPlugin {
               }
             });
 
+            if (nodesUsingMesh.length === 0) {
+              console.warn(
+                `VRMExpressionLoaderPlugin: ${schemaGroup.name} attempts to bind a morph target to the mesh #${bind.mesh} but the mesh is not found.`,
+              );
+              return;
+            }
+
             const morphTargetIndex = bind.index;
 
             await Promise.all(
